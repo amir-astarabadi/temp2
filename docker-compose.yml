@@ -1,0 +1,87 @@
+services:
+    nginx:
+        build:
+            context: "./docker/nginx"
+            dockerfile: Dockerfile
+        container_name: qanun_api_nginx
+        ports:
+            - ${NGINX_PORT:-8000}:80
+        environment:
+            - TZ=Asia/Tehran
+        volumes:
+            - .:/var/www/html
+        networks:
+            - qanun_api_network
+        depends_on:
+            - php
+
+    php:
+        build:
+            context: "./docker/php"
+            dockerfile: Dockerfile
+        container_name: qanun_api_php
+        volumes:
+            - .:/var/www/html
+        networks:
+            - qanun_api_network
+        environment:
+            PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE:-debug,develop}
+            PHP_XDEBUG_AUTOSTART: ${PHP_XDEBUG_AUTOSTART:-yes}
+            PHP_XDEBUG_HOST: host.docker.internal
+            PHP_XDEBUG_PORT: 9003
+            PHP_XDEBUG_IDE_KEY: phpstorm
+            PHP_IDE_CONFIG: serverName=qanun_api
+            XDEBUG_CONFIG: ${PHP_XDEBUG_CONFIG:-}
+        extra_hosts:
+            - host.docker.internal:${DOCKER_HOST_GATEWAY:-host-gateway}
+        depends_on:
+            - mysql
+            - redis
+
+    mysql:
+        image: mysql:8.1.0
+        container_name: qanun_api_mysql
+        ports:
+            - ${MYSQL_PORT:-3306}:3306
+        volumes:
+            - qanun_api_mysql_data:/var/lib/mysql
+            - ./docker/mysql/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
+        environment:
+            - TZ=Asia/Tehran
+            - MYSQL_ROOT_PASSWORD=password
+            - MYSQL_DATABASE=qanun_api
+        networks:
+            - qanun_api_network
+
+    phpmyadmin:
+        image: phpmyadmin:5.2.1
+        container_name: qanun_api_pma
+        ports:
+            - ${PMA_PORT:-8090}:80
+        environment:
+            PMA_HOST: qanun_api_mysql
+            MYSQL_ROOT_PASSWORD: password
+        networks:
+            - qanun_api_network
+        depends_on:
+            - mysql
+
+    redis:
+        image: redis:6.2.6-alpine
+        container_name: qanun_api_redis
+        ports:
+            - ${REDIS_PORT:-6379}:6379
+        environment:
+            - TZ=Asia/Tehran
+        volumes:
+            - qanun_api_redis_data:/usr/local/etc/redis
+        networks:
+            - qanun_api_network
+
+networks:
+    qanun_api_network:
+
+volumes:
+    qanun_api_mysql_data:
+    qanun_api_mongodb_data:
+    qanun_api_redis_data:
