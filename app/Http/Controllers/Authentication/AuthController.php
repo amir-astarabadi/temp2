@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Authentication;
 use App\Http\Requests\Authentication\UserRegisterRequest;
 use App\Exceptions\Authentication\LoginException;
 use App\Http\Requests\Authentication\LoginRequest;
+use Illuminate\Http\Response as HttpResponse;
 use App\Services\Authentication\AuthService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Responses\Response;
 use App\Models\User;
@@ -60,6 +62,17 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
 
         return Response::success('Email verified successfully');
+    }
+
+    public function resendVerifyEmail()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->sendEmailVerificationNotification();
+
+        return Response::success("Verification email sent to {$user->email}. Please check your inbox.", [
+        ], code: HttpResponse::HTTP_OK);
+
     }
     
 }

@@ -12,8 +12,16 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     use DatabaseTransactions;
 
-    public function login(User $user) :void
+    protected ?User $authUser = null;
+
+    public function login(?User $user = null): void
     {
-        Sanctum::actingAs($user, ['*']);
+        $this->authUser = $user;
+
+        if ($this->authUser === null) {
+            $this->authUser = User::factory()->create();
+        }
+
+        Sanctum::actingAs($this->authUser, ['*']);
     }
 }
