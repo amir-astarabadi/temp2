@@ -8,6 +8,7 @@ use App\Http\Requests\Authentication\LoginRequest;
 use App\Services\Authentication\AuthService;
 use App\Http\Controllers\Controller;
 use App\Responses\Response;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -36,10 +37,29 @@ class AuthController extends Controller
     {
         $userData = $request->only('name', 'email', 'password');
         $user = $this->authService->register($userData);
+
+        $user->sendEmailVerificationNotification();
     
         return Response::success('Registration successful', [
             'token' => $user->token,
             'email' => $user->email,
+            'message' => "Verification email sent to {$user->email}. Please check your inbox.",
         ], code: 201);
     }
+
+    public function verifyEmail(User $user, string $hash)
+    {
+        if (! hash_equals(sha1( $user->getEmailForVerification()), (string) $hash)) {
+            return Response::error('Invalid verification link', code: 403);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return Response::error('Email already verified', code: 400);
+        }
+
+        $user->markEmailAsVerified();
+
+        return Response::success('Email verified successfully');
+    }
+    
 }
