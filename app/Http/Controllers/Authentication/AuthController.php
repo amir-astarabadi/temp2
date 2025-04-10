@@ -83,14 +83,13 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->validated('email'))->first();
 
-        $message = 'Forgent password link sent to ' . $request->validated('email') . ' email.';
+        $message = 'Forgent password link sent to ' . $request->validated('email');
 
-        if (! $user) {
-            return Response::success($message);
+        if ($user) {
+
+            $token = $this->authService->createForgetPasswordResetToken($user);
+            $user->notify(new ForgetPasswordNotification($token, $user->email));
         }
-
-        $token = $this->authService->createForgetPasswordResetToken($user);
-        $user->notify(new ForgetPasswordNotification($token, $user->email));
 
         return Response::success($message);
     }

@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 
-class ForgetPasswordNotification extends Notification
+class ForgetPasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
