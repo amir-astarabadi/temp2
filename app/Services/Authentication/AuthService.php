@@ -36,6 +36,7 @@ class AuthService
         $user->accepted_contract = $userData['accepted_contract'] ?? false;
         $user->email = $userData['email'] ?? '';
         $user->password = Hash::make($userData['password'] ?? '');
+        $user->name = $userData['name'] ?? '';
         $user->save();
         $user->token = $user->createToken('auth_token')->plainTextToken;
 

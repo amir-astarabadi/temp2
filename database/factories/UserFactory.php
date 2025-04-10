@@ -17,7 +17,8 @@ class UserFactory extends Factory
     {
         return [
             'accepted_contract' => true,
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => fake()->unique()->safeEmail(),
+            'name' => fake()->firstName(),
             'email_verified_at' => now(),
             'password' => 'password',
             'remember_token' => Str::random(10),

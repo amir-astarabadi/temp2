@@ -50,6 +50,7 @@ class AuthController extends Controller
         return Response::success('Registration successful', [
             'token' => $user->token,
             'email' => $user->email,
+            'name' => $user->name,
             'message' => "Verification email sent to {$user->email}. Please check your inbox.",
         ], code: 201);
     }

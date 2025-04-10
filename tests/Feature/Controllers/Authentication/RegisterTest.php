@@ -14,10 +14,11 @@ class RegisterTest extends TestCase
     {
         Notification::fake();
         $userData = [
-            'accepted_contract' => true,
+            'name' => fake()->firstName(),
             'email' => 'example@gmail.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'accepted_contract' => true,
         ];
         $response = $this->postJson(route('user_register'), $userData);
 
@@ -27,6 +28,7 @@ class RegisterTest extends TestCase
                 ->has('data')
                 ->has('data.token')
                 ->where('data.email', $userData['email'])
+                ->where('data.name', $userData['name'])
                 ->etc();
         });
 
@@ -37,10 +39,11 @@ class RegisterTest extends TestCase
     {
         $user = User::factory()->create();
         $userData = [
-            'accepted_contract' => true,
+            'name' => fake()->firstName(),
             'email' => $user->email,
             'password' => 'password',
             'password_confirmation' => 'password',
+            'accepted_contract' => true,
         ];
         $response = $this->postJson(route('user_register'), $userData);
 
