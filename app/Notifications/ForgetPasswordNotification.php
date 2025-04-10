@@ -2,11 +2,10 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Bus\Queueable;
 
 class ForgetPasswordNotification extends Notification implements ShouldQueue
 {
@@ -34,13 +33,6 @@ class ForgetPasswordNotification extends Notification implements ShouldQueue
 
     protected function passwordForgetUrl()
     {
-        return URL::temporarySignedRoute(
-            'password_reset_check',
-            now()->addMinutes(config('auth.verification.expire', 60)),
-            [
-                'token' => $this->token,
-                'email' => $this->email,
-            ]
-        );
+        return config('auth.password_forget_url') . "?toke=$this->token&email=$this->email";
     }
 }

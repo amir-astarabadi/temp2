@@ -103,4 +103,5 @@ return [
 
     'password_timeout' => 10800,
 
+    'password_forget_url' => env("PASSWORD_FORGET_URL", null)
 ];
