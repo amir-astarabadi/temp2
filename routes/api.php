@@ -13,8 +13,6 @@ Route::prefix('password')->middleware('throttle:2,1')->group(function () {
         ->name('password_forget')
         ->middleware('guest');
 
-    Route::get('reset', [AuthController::class, 'passwordResetCheck'])
-        ->name('password_reset_check');
     Route::post('reset', [AuthController::class, 'passwordReset'])
         ->name('password_reset');
 });

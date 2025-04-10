@@ -94,22 +94,6 @@ class AuthController extends Controller
         return Response::success($message);
     }
 
-    public function passwordResetCheck()
-    {
-        $email = request('email');
-        $token = request('token');
-
-        $record = DB::table('password_resets')
-            ->where('email', $email)
-            ->first();
-
-        if (!$record || !Hash::check($token, $record->token)) {
-            abort(403, 'Invalid or expired token');
-        }
-
-        return redirect("https://www.qanun.bio/password/reset?token=$token&email=$email");
-    }
-
     public function passwordReset(PasswordResetRequest $request)
     {
         if ($user = auth()->user()) {
