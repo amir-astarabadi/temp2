@@ -103,5 +103,7 @@ return [
 
     'password_timeout' => 10800,
 
-    'password_forget_url' => env("PASSWORD_FORGET_URL", null)
+    'password_forget_url' => env("PASSWORD_FORGET_URL", null),
+    
+    'verify_email_url' => env("VERIFY_EMAIL_URL", null),
 ];

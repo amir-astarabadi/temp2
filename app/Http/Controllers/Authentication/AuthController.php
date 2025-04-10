@@ -58,16 +58,13 @@ class AuthController extends Controller
     public function verifyEmail(User $user, string $hash)
     {
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
-            return Response::error('Invalid verification link', code: 403);
-        }
-
-        if ($user->hasVerifiedEmail()) {
-            return Response::error('Email already verified', code: 400);
+            return redirect(config('auth.verify_email_url'), HttpResponse::HTTP_UNAUTHORIZED)
+                ->with('message', 'Email verified successfully');
         }
 
         $user->markEmailAsVerified();
 
-        return Response::success('Email verified successfully');
+        return redirect(config('auth.verify_email_url'))->with('message', 'Email verified successfully');
     }
 
     public function resendVerifyEmail()
