@@ -36,9 +36,21 @@ class AuthService
         $user->accepted_contract = $userData['accepted_contract'] ?? false;
         $user->email = $userData['email'] ?? '';
         $user->password = Hash::make($userData['password'] ?? '');
+        $user->name = $userData['name'] ?? '';
         $user->save();
         $user->token = $user->createToken('auth_token')->plainTextToken;
 
         return $user;
+    }
+
+    public function createForgetPasswordResetToken(User $user)
+    {
+        return app('auth.password.broker')->createToken($user);
+    }
+
+    public function resetPassword(string $password, User $user):void
+    {
+        $user->password = Hash::make($password);
+        $user->save();
     }
 }
