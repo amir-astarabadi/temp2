@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
+use App\Models\Project;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Project\ProjectService;
 use App\Responses\Response;
@@ -36,6 +37,16 @@ class ProjectController extends Controller
             message: 'Project created successfully.',
             code: HttpResponse::HTTP_OK,
             data: $projects,
+        );
+    }
+
+    public function delete(Project $project)
+    {
+        $project->delete();
+
+        return Response::success(
+            message: 'Project deleted successfully.',
+            code: HttpResponse::HTTP_OK,
         );
     }
 }

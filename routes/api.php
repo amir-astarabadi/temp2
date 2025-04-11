@@ -42,4 +42,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('projects', [ProjectController::class, 'index'])
         ->name('projects.index')
         ->middleware('throttle:10,1');
+
+
+    Route::delete('projects/{project}', [ProjectController::class, 'delete'])
+        ->name('projects.delete')
+        ->middleware('throttle:10,1');
 });
