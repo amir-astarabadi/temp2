@@ -47,4 +47,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('projects/{project}', [ProjectController::class, 'delete'])
         ->name('projects.delete')
         ->middleware('throttle:10,1');
+
+
+    Route::get('projects/{project}', [ProjectController::class, 'show'])
+        ->name('projects.show')
+        ->middleware('throttle:10,1');
 });
