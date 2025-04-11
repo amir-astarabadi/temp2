@@ -14,7 +14,7 @@ class ProjectDeleteTest extends TestCase
         $this->login();
         $project = Project::factory()->for($this->authUser)->create();
 
-        $response = $this->deleteJson(route('projects.delete',['project' => $project->getKey()]));
+        $response = $this->deleteJson(route('projects.destroy',['project' => $project->getKey()]));
 
         $response->assertOk();
         $response->assertJson(function (AssertableJson $assertableJson){

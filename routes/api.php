@@ -35,26 +35,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware('throttle:2,1')
         ->name('user.verify');
 
-    Route::post('projects', [ProjectController::class, 'store'])
-        ->name('projects.store')
-        ->middleware('throttle:3,1');
-
-    Route::get('projects', [ProjectController::class, 'index'])
-        ->name('projects.index')
+        Route::apiResource('projects', ProjectController::class)
+        ->only(['index', 'show', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
 
-
-    Route::delete('projects/{project}', [ProjectController::class, 'delete'])
-        ->name('projects.delete')
-        ->middleware('throttle:10,1');
-
-
-    Route::get('projects/{project}', [ProjectController::class, 'show'])
-        ->name('projects.show')
-        ->middleware('throttle:10,1');
-
-
-    Route::put('projects/{project}', [ProjectController::class, 'update'])
-        ->name('projects.update')
-        ->middleware('throttle:10,1');
 });

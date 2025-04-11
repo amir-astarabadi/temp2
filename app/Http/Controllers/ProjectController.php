@@ -64,7 +64,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function delete(Project $project)
+    public function destroy(Project $project)
     {
         $project->delete();
 
