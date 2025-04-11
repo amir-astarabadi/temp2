@@ -3,6 +3,7 @@
 namespace App\Services\Project;
 
 use App\Models\Project;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
@@ -17,7 +18,7 @@ class ProjectService
         return $project;
     }
 
-    public function search(int $owner, array $query): array
+    public function search(int $owner, array $query): Collection
     {
         return Project::where('owner_id', $owner)
             ->when($query['name'] ?? null, function ($queryBuilder) use ($query) {
@@ -28,7 +29,6 @@ class ProjectService
             })
             ->select('id', 'name', 'description', 'created_at')
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->toArray();
+            ->get();
     }
 }

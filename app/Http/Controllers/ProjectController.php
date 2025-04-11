@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\Project\ProjectResourceCollection;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Project\ProjectService;
 use App\Responses\Response;
@@ -31,7 +32,7 @@ class ProjectController extends Controller
         return Response::success(
             message: 'Project created successfully.',
             code: HttpResponse::HTTP_OK,
-            data: $projects,
+            data: ProjectResourceCollection::make($projects),
         );
     }
 
