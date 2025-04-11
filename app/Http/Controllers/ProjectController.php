@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
+use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Project\ProjectResourceCollection;
 use Illuminate\Http\Response as HttpResponse;
@@ -49,6 +50,17 @@ class ProjectController extends Controller
                 'description' => $project->description,
                 'created_at' => $project->created_at,
             ],
+        );
+    }
+
+    public function update(Project $project,ProjectUpdateRequest $request)
+    {
+        $project = $this->projectService->update($request->validated(), $project);
+
+        return Response::success(
+            message: 'Project updated successfully.',
+            code: HttpResponse::HTTP_OK,
+            data: ProjectResource::make($project),
         );
     }
 

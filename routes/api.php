@@ -52,4 +52,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('projects/{project}', [ProjectController::class, 'show'])
         ->name('projects.show')
         ->middleware('throttle:10,1');
+
+
+    Route::put('projects/{project}', [ProjectController::class, 'update'])
+        ->name('projects.update')
+        ->middleware('throttle:10,1');
 });

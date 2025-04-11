@@ -18,6 +18,17 @@ class ProjectService
         return $project;
     }
 
+    public function update(array $projectData, Project $project): Project
+    {
+        foreach ($projectData as $projectProperty => $newValue) {
+            $project->{$projectProperty} = $newValue;
+        }
+
+        $project->save();
+
+        return $project;
+    }
+
     public function search(int $owner, array $query): Collection
     {
         return Project::where('owner_id', $owner)
