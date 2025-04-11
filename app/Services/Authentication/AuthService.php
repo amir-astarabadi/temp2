@@ -9,20 +9,23 @@ use App\Models\User;
 
 class AuthService
 {
-    public function login(array $credentials): string
+    public function login(User|array $user): string
     {
-        $user = User::where('email', $credentials['email'])->first();
+        if ($user instanceof User) {
+            return $user->createToken('auth_token')->plainTextToken;
+        }
 
-        if (!$user) {
+        $condidatUser = User::where('email', $user['email'])->first();
+
+        if (!$condidatUser) {
             throw new LoginException(code: Response::HTTP_UNAUTHORIZED);
         }
 
-        if (!Hash::check($credentials['password'], $user->password)) {
+        if (!Hash::check($user['password'], $condidatUser->password)) {
             throw new LoginException(code: Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-        return $token;
+        return $condidatUser->createToken('auth_token')->plainTextToken;
     }
 
     public function logout(User $user): void
@@ -30,7 +33,7 @@ class AuthService
         $user->tokens()->delete();
     }
 
-    public function register(array $userData): User
+    public function register(array $userData, bool $verifyEmail = false): User
     {
         $user = new User();
         $user->accepted_contract = $userData['accepted_contract'] ?? false;
@@ -40,6 +43,10 @@ class AuthService
         $user->save();
         $user->token = $user->createToken('auth_token')->plainTextToken;
 
+        if ($verifyEmail) {
+            $user->markEmailAsVerified();
+        };
+
         return $user;
     }
 
@@ -48,7 +55,7 @@ class AuthService
         return app('auth.password.broker')->createToken($user);
     }
 
-    public function resetPassword(string $password, User $user):void
+    public function resetPassword(string $password, User $user): void
     {
         $user->password = Hash::make($password);
         $user->save();
