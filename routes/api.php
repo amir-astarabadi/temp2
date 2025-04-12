@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Authentication\GoogleLoginController;
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\DatasetController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->name('user.verify');
 
         Route::apiResource('projects', ProjectController::class)
+        ->only(['index', 'show', 'store', 'update', 'destroy'])
+        ->middleware('throttle:10,1');
+
+        Route::apiResource('datasets', DatasetController::class)
         ->only(['index', 'show', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
 
