@@ -31,7 +31,7 @@ class ProjectController extends Controller
         $projects = $this->projectService->search(owner: auth()->id(), query: $request->validated());
 
         return Response::success(
-            message: 'Project created successfully.',
+            message: 'Ok',
             code: HttpResponse::HTTP_OK,
             data: ProjectResourceCollection::make($projects),
         );

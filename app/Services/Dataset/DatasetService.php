@@ -23,7 +23,7 @@ class DatasetService
             'name' => $datasetData['name']
         ])->exists()){
             $name = $datasetData['name'];
-            $dataset->name = 'new ' . $name;
+            $dataset->name = now()->timestamp . '_' . $name;
         }
 
         $dataset->save();
