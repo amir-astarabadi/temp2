@@ -17,6 +17,15 @@ class DatasetService
         $dataset->file_path = $datasetData['file_path'];
         $dataset->status = 'uploading';
 
+        if(Dataset::where([
+            'owner_id' => $datasetData['owner_id'],
+            'project_id' => $datasetData['project_id'],
+            'name' => $datasetData['name']
+        ])->exists()){
+            $name = $datasetData['name'];
+            $dataset->name = 'new ' . $name;
+        }
+
         $dataset->save();
 
         return $dataset;
