@@ -36,12 +36,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware('throttle:2,1')
         ->name('user.verify');
 
-        Route::apiResource('projects', ProjectController::class)
+    Route::apiResource('projects', ProjectController::class)
         ->only(['index', 'show', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
 
-        Route::apiResource('datasets', DatasetController::class)
+    Route::apiResource('datasets', DatasetController::class)
         ->only(['index', 'show', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
-
 });
