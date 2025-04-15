@@ -40,12 +40,13 @@ class AuthService
         $user->email = $userData['email'] ?? '';
         $user->password = Hash::make($userData['password'] ?? '');
         $user->name = $userData['name'] ?? '';
-        $user->save();
-        $user->token = $user->createToken('auth_token')->plainTextToken;
-
+        
         if ($verifyEmail) {
             $user->markEmailAsVerified();
         };
+        $user->save();
+
+        $user->token = $user->createToken('auth_token')->plainTextToken;
 
         return $user;
     }
