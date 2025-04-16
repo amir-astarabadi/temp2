@@ -18,7 +18,7 @@ class UserRegisterRequest extends FormRequest
             'name' => ['required', 'string', 'min:3', 'max:50'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'accepted_contract' => ['required', 'boolean', 'accepted'],
+            'accepted_contract' => ['required', 'accepted'],
         ];
     }
 }
