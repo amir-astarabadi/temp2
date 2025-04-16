@@ -59,7 +59,7 @@ class AuthController extends Controller
     {
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
             return redirect(config('auth.verify_email_url'), HttpResponse::HTTP_UNAUTHORIZED)
-                ->with('message', 'Email verified successfully');
+                ->with('message', 'Invalid verification link');
         }
 
         $user->markEmailAsVerified();
