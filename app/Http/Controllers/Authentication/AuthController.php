@@ -12,6 +12,7 @@ use App\Services\Authentication\AuthService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\PasswordResetRequest;
+use App\Http\Requests\Authentication\VerifyEmailRequest;
 use App\Responses\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -55,8 +56,10 @@ class AuthController extends Controller
         ], code: 201);
     }
 
-    public function verifyEmail(User $user, string $hash, string $expireAt)
+    public function verifyEmail(User $user, VerifyEmailRequest $request)
     {
+        $hash = $request->get('hash');
+        $expireAt = $request->get('expire_at');
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash) || now()->timestamp > $expireAt) {
             return Response::error('Invalid verification link', code: HttpResponse::HTTP_UNAUTHORIZED);
         }

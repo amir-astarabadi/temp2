@@ -25,7 +25,7 @@ Route::prefix('password')->middleware('throttle:2,1')->group(function () {
         ->name('password_reset');
 });
 
-Route::get('verify/{user}/{hash}', [AuthController::class, 'verifyEmail'])
+Route::get('verify/{user}', [AuthController::class, 'verifyEmail'])
     ->middleware(['signed', 'throttle:2,1'])
     ->name('email_verification');
 

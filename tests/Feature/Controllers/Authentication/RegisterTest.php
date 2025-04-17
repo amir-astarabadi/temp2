@@ -50,7 +50,7 @@ class RegisterTest extends TestCase
         $response->assertUnprocessable();
         $response->assertJson(function (AssertableJson $assertableJson) use ($userData) {
             $assertableJson
-                ->where('message', 'The email has already been taken.')
+                ->where('message', 'The email has already been taken. Please singin.')
                 ->etc();
         });
     }
