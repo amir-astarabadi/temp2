@@ -33,6 +33,6 @@ class ForgetPasswordNotification extends Notification implements ShouldQueue
 
     protected function passwordForgetUrl()
     {
-        return config('auth.password_forget_url') . "?toke=$this->token&email=$this->email";
+        return config('auth.password_forget_url') . "?token=$this->token&email=$this->email";
     }
 }

@@ -32,7 +32,7 @@ class GoogleLoginController extends Controller
                 'password' => Hash::make(Str::random(16))
             ];
 
-            $user = $this->authService->register(userData: $userData, verifyEmail: true);
+            $user = $this->authService->register(userData: $userData, verifyEmail: true, needToken: false);
         }
 
         $queryParams =  "?" . http_build_query([

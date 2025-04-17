@@ -33,20 +33,22 @@ class AuthService
         $user->tokens()->delete();
     }
 
-    public function register(array $userData, bool $verifyEmail = false): User
+    public function register(array $userData, bool $verifyEmail = false, bool $needToken = true): User
     {
         $user = new User();
         $user->accepted_contract = $userData['accepted_contract'] ?? false;
         $user->email = $userData['email'] ?? '';
         $user->password = Hash::make($userData['password'] ?? '');
         $user->name = $userData['name'] ?? '';
-        
+
         if ($verifyEmail) {
             $user->markEmailAsVerified();
         };
         $user->save();
 
-        $user->token = $user->createToken('auth_token')->plainTextToken;
+        if ($needToken) {
+            $user->token = $user->createToken('auth_token')->plainTextToken;
+        }
 
         return $user;
     }
