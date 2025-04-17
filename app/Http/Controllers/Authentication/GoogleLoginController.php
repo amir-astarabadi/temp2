@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Authentication;
 use App\Services\Authentication\AuthService;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Authentication\GoogleLoginRequest;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+use App\Responses\Response;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -14,36 +16,27 @@ class GoogleLoginController extends Controller
 {
     public function __construct(private AuthService $authService) {}
 
-    public function redirectToGoogle()
+
+    public function handleGoogleCallback(GoogleLoginRequest $reqquest)
     {
-        return Socialite::driver('google')->redirect();
-    }
-
-
-    public function handleGoogleCallback()
-    {
-        $googleUser = Socialite::driver('google')->stateless()->user();
-
-        $user = User::where('email', $googleUser->email)->first();
+        $user = User::where('email', $reqquest->validated('email'))->first();
 
         if (!$user) {
             $userData = [
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
+                'name' => $reqquest->validated('name'),
+                'email' => $reqquest->validated('email'),
                 'password' => Hash::make(Str::random(16))
             ];
 
-            $user = $this->authService->register(userData: $userData, verifyEmail: true, needToken: false);
+            $user = $this->authService->register(userData: $userData, verifyEmail: true);
+        } else {
+            $user->token = $this->authService->login($user);
         }
 
-        $queryParams =  "?" . http_build_query([
-            'name' => $user->name,
-            'email' => $user->email,
-            'token' => $this->authService->login($user)
-        ]);
+        if ($user->email_verified_at === null) {
+            $user->markEmailAsVerified();
+        }
 
-        Log::channel('daily')->info(config('auth.frontend_auto_login') . $queryParams);
-
-        return redirect()->to(config('auth.frontend_auto_login') . $queryParams);
+        return Response::success('Login successful', UserResource::make($user), code: 200);
     }
 }
