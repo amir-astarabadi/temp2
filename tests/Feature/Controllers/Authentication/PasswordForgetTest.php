@@ -4,7 +4,6 @@ namespace Tests\Feature\Controllers\Authentication;
 
 use App\Models\User;
 use App\Notifications\ForgetPasswordNotification;
-use App\Notifications\VerifyEmailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -29,7 +28,7 @@ class PasswordForgetTest extends TestCase
         $response->assertOk();
         $response->assertJson(function (AssertableJson $assertableJson) use ($userData) {
             $assertableJson
-                ->where('message', 'Forgent password link sent to ' . $userData['email'])
+                ->where('message', 'Forget password link sent to ' . $userData['email'])
                 ->etc();
         });
         Notification::assertNothingSent();
@@ -47,7 +46,7 @@ class PasswordForgetTest extends TestCase
         $response->assertOk();
         $response->assertJson(function (AssertableJson $assertableJson) use ($userData) {
             $assertableJson
-            ->where('message', 'Forgent password link sent to ' . $userData['email'])
+            ->where('message', 'Forget password link sent to ' . $userData['email'])
             ->etc();
         });
         Notification::assertSentTo($user, ForgetPasswordNotification::class);

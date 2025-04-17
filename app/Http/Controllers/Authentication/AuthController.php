@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\PasswordResetRequest;
 use App\Http\Requests\Authentication\VerifyEmailRequest;
+use App\Http\Resources\User\UserResource;
 use App\Responses\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use stdClass;
 
 class AuthController extends Controller
 {
@@ -48,12 +50,7 @@ class AuthController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        return Response::success('Registration successful', [
-            'token' => $user->token,
-            'email' => $user->email,
-            'name' => $user->name,
-            'message' => "Verification email sent to {$user->email}. Please check your inbox.",
-        ], code: 201);
+        return Response::success('Registration successful', UserResource::make($user), code: 201);
     }
 
     public function verifyEmail(User $user, VerifyEmailRequest $request)
@@ -67,11 +64,7 @@ class AuthController extends Controller
 
         $user->markEmailAsVerified();
 
-        return Response::success('Email verified successfully', [
-            'email' => $user->email,
-            'name' => $user->name,
-            'email_verified_at' => $user->email_verified_at,
-        ]);
+        return Response::success('Email verified successfully', UserResource::make($user));
     }
 
     public function resendVerifyEmail()
@@ -87,7 +80,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->validated('email'))->first();
 
-        $message = 'Forgent password link sent to ' . $request->validated('email');
+        $message = 'Forget password link sent to ' . $request->validated('email');
 
         if ($user) {
 
@@ -100,27 +93,27 @@ class AuthController extends Controller
 
     public function passwordReset(PasswordResetRequest $request)
     {
-        if ($user = auth()->user()) {
-            $this->authService->resetPassword($request->validated('password'), $user);
-            return Response::success('Password reset successfully');
+        $user = auth()->user();
+        $record = null;
+   
+        if (!$user) {
+
+            $record = DB::table('password_resets')
+                ->where('email', $request->validated('email'))
+                ->first();
+
+            $user = User::where('email', $record?->email)->first();
         }
 
-        $record = DB::table('password_resets')
-            ->where('email', $request->validated('email'))
-            ->first();
-
-        $user = User::where('email', $request->validated('email'))->first();
-
-        if (!$user || !$record || !Hash::check($request->validated('token'), $record->token)) {
-            abort(HttpResponse::HTTP_UNAUTHORIZED, 'Invalid or expired token');
+        if (!$user && !Hash::check($request->validated('token'), $record?->token)) {
+            return Response::error('Invalid or expired token', code: HttpResponse::HTTP_UNAUTHORIZED);
         }
 
         $this->authService->resetPassword($request->validated('password'), $user);
+        $this->authService->logout($user);
+        $this->authService->login($user);
 
-        DB::table('password_resets')
-            ->where('email', $request->validated('email'))
-            ->delete();
-
-        return Response::success('Password reset successfully');
+        
+        return Response::success('Password reset successfully', UserResource::make($user));
     }
 }
