@@ -107,5 +107,5 @@ return [
 
     'verify_email_url' => env("VERIFY_EMAIL_URL", null),
 
-    'frontend_home_url' => env("FRONT_HOME_URL", null),
+    'frontend_auto_login' => env("FRONT_AUTO_LOGIN_URL", null),
 ];

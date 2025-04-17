@@ -6,7 +6,7 @@ use Exception;
 
 class LoginException extends Exception
 {
-    protected $message = 'Invalid credentials.';
+    protected $message = 'Invalid Password or Email.';
 
     public function __construct(string $message = null, int $code = 0, \Throwable $previous = null)
     {
