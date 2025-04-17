@@ -58,8 +58,9 @@ class AuthController extends Controller
 
     public function verifyEmail(User $user, VerifyEmailRequest $request)
     {
-        $hash = $request->get('hash');
+        $hash = $request->get('token');
         $expireAt = $request->get('expire_at');
+
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash) || now()->timestamp > $expireAt) {
             return Response::error('Invalid verification link', code: HttpResponse::HTTP_UNAUTHORIZED);
         }

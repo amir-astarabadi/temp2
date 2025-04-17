@@ -25,8 +25,8 @@ Route::prefix('password')->middleware('throttle:2,1')->group(function () {
         ->name('password_reset');
 });
 
-Route::get('verify/{user}', [AuthController::class, 'verifyEmail'])
-    ->middleware(['signed', 'throttle:2,1'])
+Route::post('verify/{user}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['throttle:2,1'])
     ->name('email_verification');
 
 Route::middleware(['auth:sanctum', 'throttle:3,1'])->group(function () {

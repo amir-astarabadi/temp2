@@ -15,7 +15,7 @@ class VerifyEmailRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string'],
-            'expired_at' => ['required', 'string']
+            'expire_at' => ['required', 'string']
         ];
     }
 }
