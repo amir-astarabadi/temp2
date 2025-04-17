@@ -116,4 +116,12 @@ class AuthController extends Controller
 
         return Response::success('Password reset successfully');
     }
+
+    public function resedEmailVerificationNotifi()
+    {
+        $user = auth()->user();
+        $user->sendEmailVerificationNotification();
+
+        return Response::success('Verification email resent to ' . $user->email . ' successfully');
+    }
 }
