@@ -6,6 +6,7 @@ use App\Services\Authentication\AuthService;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -36,12 +37,13 @@ class GoogleLoginController extends Controller
         }
 
         $queryParams =  "?" . http_build_query([
-            'message' => 'Logedin successful',
             'name' => $user->name,
             'email' => $user->email,
             'token' => $this->authService->login($user)
         ]);
 
-        return redirect()->to(config('auth.frontend_home_url') . $queryParams);
+        Log::channel('daily')->info(config('auth.frontend_auto_login') . $queryParams);
+
+        return redirect()->to(config('auth.frontend_auto_login') . $queryParams);
     }
 }

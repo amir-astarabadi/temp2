@@ -111,7 +111,7 @@ class AuthController extends Controller
 
         $this->authService->resetPassword($request->validated('password'), $user);
         $this->authService->logout($user);
-        $this->authService->login($user);
+        $user->token = $this->authService->login($user);
 
         
         return Response::success('Password reset successfully', UserResource::make($user));
