@@ -32,11 +32,9 @@ class ProjectService
     public function search(int $owner, array $query): Collection
     {
         return Project::where('owner_id', $owner)
-            ->when($query['name'] ?? null, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('name', 'like', '%' . $query['name'] . '%');
-            })
-            ->when($query['description'] ?? null, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('description', 'like', '%' . $query['description'] . '%');
+            ->when($query['query'] ?? null, function ($queryBuilder) use ($query) {
+                return $queryBuilder->where('name', 'like', '%' . $query['query'] . '%')
+                    ->orWhere('description', 'like', '%' . $query['query'] . '%');
             })
             ->select('id', 'name', 'description', 'created_at')
             ->orderBy('created_at', 'desc')
