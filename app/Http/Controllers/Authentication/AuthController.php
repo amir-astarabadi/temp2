@@ -55,16 +55,19 @@ class AuthController extends Controller
         ], code: 201);
     }
 
-    public function verifyEmail(User $user, string $hash)
+    public function verifyEmail(User $user, string $hash, string $expireAt)
     {
-        if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
-            return redirect(config('auth.verify_email_url'), HttpResponse::HTTP_UNAUTHORIZED)
-                ->with('message', 'Invalid verification link');
+        if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash) || now()->timestamp > $expireAt) {
+            return Response::error('Invalid verification link', code: HttpResponse::HTTP_UNAUTHORIZED);
         }
 
         $user->markEmailAsVerified();
 
-        return redirect(config('auth.verify_email_url'))->with('message', 'Email verified successfully');
+        return Response::success('Email verified successfully', [
+            'email' => $user->email,
+            'name' => $user->name,
+            'email_verified_at' => $user->email_verified_at,
+        ]);
     }
 
     public function resendVerifyEmail()
