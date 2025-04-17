@@ -29,7 +29,7 @@ Route::get('verify/{user}/{hash}', [AuthController::class, 'verifyEmail'])
     ->middleware(['signed', 'throttle:2,1'])
     ->name('email_verification');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::post('/user/verify', [AuthController::class, 'resendVerifyEmail'])

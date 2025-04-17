@@ -37,7 +37,7 @@ class ProjectIndexTest extends TestCase
 
         $projects = Project::factory(2)->for($this->authUser)->create();
 
-        $response = $this->getJson(route('projects.index', ['name' => $projects[0]->name]));
+        $response = $this->getJson(route('projects.index', ['query' => $projects[0]->name]));
 
         $response->assertOk();
         $response->assertJson(
