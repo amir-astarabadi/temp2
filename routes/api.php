@@ -3,6 +3,7 @@
 use App\Http\Controllers\Authentication\GoogleLoginController;
 use App\Http\Controllers\Authentication\AuthController;
 use App\Http\Controllers\DatasetController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,5 +44,9 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
 
     Route::apiResource('datasets', DatasetController::class)
         ->only(['index', 'show', 'store', 'update', 'destroy'])
+        ->middleware('throttle:10,1');
+
+    Route::get('profile', [ProfileController::class, 'show'])
+        ->name('profiles.show')
         ->middleware('throttle:10,1');
 });
