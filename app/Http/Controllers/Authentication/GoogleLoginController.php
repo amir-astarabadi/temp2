@@ -30,6 +30,7 @@ class GoogleLoginController extends Controller
 
             $user = $this->authService->register(userData: $userData, verifyEmail: true);
         } else {
+            $this->authService->logout($user);
             $user->token = $this->authService->login($user);
         }
 

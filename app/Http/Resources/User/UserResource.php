@@ -14,7 +14,7 @@ class UserResource extends JsonResource
             'token' => $this->when($this->token, $this->token),
             'email' => $this->email,
             'name' => $this->name,
-            'email_vefied_at' => $this->email_verified_at,
+            'email_verified_at' => $this->email_verified_at,
         ];
     }
 }
