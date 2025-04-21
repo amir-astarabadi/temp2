@@ -33,7 +33,7 @@ class AuthService
         $user->tokens()->delete();
     }
 
-    public function register(array $userData, bool $verifyEmail = false): User
+    public function register(array $userData, bool $verifyEmail = false, bool $withToken = true): User
     {
         $user = new User();
         $user->accepted_contract = $userData['accepted_contract'] ?? false;
@@ -46,7 +46,9 @@ class AuthService
         };
         $user->save();
 
+        if ($withToken) {
             $user->token = $user->createToken('auth_token')->plainTextToken;
+        }
 
         return $user;
     }

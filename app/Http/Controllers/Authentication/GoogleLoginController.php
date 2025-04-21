@@ -28,15 +28,17 @@ class GoogleLoginController extends Controller
                 'password' => Hash::make(Str::random(16))
             ];
 
-            $user = $this->authService->register(userData: $userData, verifyEmail: true);
+            $user = $this->authService->register(userData: $userData, verifyEmail: true, withToken: false);
+
         } else {
             $this->authService->logout($user);
-            $user->token = $this->authService->login($user);
         }
-
+        
         if ($user->email_verified_at === null) {
             $user->markEmailAsVerified();
         }
+        
+        $user->token = $this->authService->login($user);
 
         return Response::success('Login successful', UserResource::make($user), code: 200);
     }
