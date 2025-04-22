@@ -108,4 +108,8 @@ return [
     'verify_email_url' => env("VERIFY_EMAIL_URL", null),
 
     'frontend_auto_login' => env("FRONT_AUTO_LOGIN_URL", null),
+
+    'verification' => [
+        'expire' => env('EMAIL_VERIFICATION_EXPIRE', 60),
+    ],
 ];
