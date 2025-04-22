@@ -44,7 +44,7 @@ class VerifyEmailNotification extends Notification implements ShouldQueue
     {
         $token = sha1($notifiable->getEmailForVerification());
         $user = $notifiable->getKey();
-        $expireAt = now()->addMinutes(config('auth.verification.expire', 60))->timestamp;
+        $expireAt = now()->addMinutes(intval(config('auth.verification.expire', 60)))->timestamp;
 
         return config('auth.verify_email_url') . "?token=$token&user=$user&expire_at=$expireAt";
     }
