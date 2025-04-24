@@ -32,7 +32,7 @@ class UploadDatasetToMinio implements ShouldQueue
         if (!$stream) {
             throw new \Exception("Failed to open stream from: {$this->from}");
         }
-        Storage::disk(StorageDiskEnum::DATASET->value)->put($this->to, $stream);
+        Storage::disk(config('filesystems.default'))->put($this->to, $stream);
         
         fclose($stream);
 

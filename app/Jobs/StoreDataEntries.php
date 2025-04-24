@@ -28,20 +28,20 @@ class StoreDataEntries implements ShouldQueue
         $dataset = Dataset::findOrFail($this->datasetId);
         try{
             $datasetService->update($dataset, ['status' => DatasetStatusEnum::INSERTING->value]);
-            $tempImport = Excel::toCollection(null, $dataset->file_path, StorageDiskEnum::DATASET->value);
+            $tempImport = Excel::toCollection(null, $dataset->file_path, config('filesystems.default'));
 
             $totalRows = $tempImport[0]->count();
-
             Excel::import(
                 new DataEntryImport($this->datasetId, $totalRows),
                 $dataset->file_path,
-                StorageDiskEnum::DATASET->value
+                config('filesystems.default'),
             );
             DataEntryImport::insertBufferEntry();
             $datasetService->update($dataset, ['status' => DatasetStatusEnum::INSERTED->value]);
         }catch(Exception $e){
             $dataEntryService->delete($dataset->getKey());
             $datasetService->update($dataset, ['status' => DatasetStatusEnum::ERROR->value]);
+            dd($e->getMessage());
             return;
         }
     }
