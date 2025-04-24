@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Dataset\DatasetCreateRequest;
+use App\Http\Requests\DatasetIndexRequest;
 use App\Http\Resources\Dataset\DatasetResource;
+use App\Http\Resources\Project\ProjectResourceCollection;
 use App\Services\Storage\DatasetStorageService;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Dataset\DatasetService;
@@ -13,6 +15,13 @@ use App\Responses\Response;
 class DatasetController extends Controller
 {
     public function __construct(private DatasetService $datasetService) {}
+
+    public function index(DatasetIndexRequest $request)
+    {
+        $projects = $this->datasetService->search(auth()->id(), $request->validated('query'));
+
+        return ProjectResourceCollection::make($projects);
+    }
 
     public function store(DatasetCreateRequest $request, DatasetStorageService $storageService)
     {
@@ -26,7 +35,7 @@ class DatasetController extends Controller
         $datastData = array_merge(
             $request->validated(),
             [
-                'owner_id' => auth()->id(),
+                'user_id' => auth()->id(),
                 'file_path' => $finalPath,
                 'type' => $request->file('dataset')->getClientOriginalExtension(),
             ]

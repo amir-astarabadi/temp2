@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers\Authentication;
+namespace Tests\Feature\Controllers\Project;
 
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -33,7 +33,7 @@ class ProjectStoreTest extends TestCase
         $this->assertDatabaseHas('projects', [
             'name' => $projectData['name'],
             'description' => $projectData['description'],
-            'owner_id' => $this->authUser->getKey(),
+            'user_id' => $this->authUser->getKey(),
         ]);
     }
 }

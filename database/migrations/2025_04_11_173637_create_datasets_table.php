@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('datasets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('file_path');
             $table->enum('status', ['uploading', 'uploaded'])->default('uploading');
-            $table->enum('type', ['csv', 'xlsx', 'xls']);
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
+            $table->enum('type', ['csv', 'xlsx', 'xls', 'excel']);
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['owner_id', 'project_id', 'name']);
+            $table->unique(['user_id', 'project_id', 'name']);
         });
     }
 
