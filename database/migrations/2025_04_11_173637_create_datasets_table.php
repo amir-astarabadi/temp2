@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('file_path');
-            $table->enum('status', ['uploading', 'uploaded'])->default('uploading');
+            $table->enum('status', ['uploading', 'uploaded', 'inserting', 'inserted', 'processing', 'processed', 'error'])->default('uploading');
             $table->enum('type', ['csv', 'xlsx', 'xls', 'excel']);
 
             $table->timestamps();

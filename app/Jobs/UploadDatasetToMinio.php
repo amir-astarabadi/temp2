@@ -2,11 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Services\Dataset\DatasetService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Http\File;
+use App\Services\Dataset\DatasetService;
 use Illuminate\Support\Facades\Storage;
+use App\Enums\DatasetStatusEnum;
+use App\Enums\StorageDiskEnum;
 
 class UploadDatasetToMinio implements ShouldQueue
 {
@@ -31,12 +32,12 @@ class UploadDatasetToMinio implements ShouldQueue
         if (!$stream) {
             throw new \Exception("Failed to open stream from: {$this->from}");
         }
-        Storage::disk('dataset')->put($this->to, $stream);
+        Storage::disk(StorageDiskEnum::DATASET->value)->put($this->to, $stream);
         
         fclose($stream);
 
         unlink($this->from);
 
-        $datasetService->update($this->datasetId, ['status' => 'uploaded']);
+        $datasetService->update($this->datasetId, ['status' => DatasetStatusEnum::UPLOADED->value]);
     }
 }

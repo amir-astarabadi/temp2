@@ -57,6 +57,13 @@ services:
             - MYSQL_DATABASE=qanun_api
         networks:
             - qanun_api_network
+    mongodb:
+        container_name: qanun_api_mongo
+        image: mongo:6.0.2
+        ports:
+            - "27018:27017"
+        networks:
+            - qanun_api_network
 
     phpmyadmin:
         image: phpmyadmin:5.2.1

@@ -2,6 +2,7 @@
 
 namespace App\Services\Dataset;
 
+use App\Enums\DatasetStatusEnum;
 use App\Models\Dataset;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,7 +18,7 @@ class DatasetService
         $dataset->project_id = $datasetData['project_id'];
         $dataset->type = $datasetData['type'];
         $dataset->file_path = $datasetData['file_path'];
-        $dataset->status = 'uploading';
+        $dataset->status = DatasetStatusEnum::UPLOADING->value;
 
         if (Dataset::where([
             'user_id' => $datasetData['user_id'],
