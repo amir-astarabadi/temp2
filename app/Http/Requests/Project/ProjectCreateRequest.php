@@ -12,14 +12,14 @@ class ProjectCreateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'owner_id' => 'required'
+            'user_id' => 'required'
         ];
     }
 
     public function prepareForValidation(): void
     {
         $this->merge([
-            'owner_id' => $this->user()->getKey(),
+            'user_id' => $this->user()->getKey(),
         ]);
     }
 }

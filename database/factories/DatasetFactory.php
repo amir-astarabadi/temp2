@@ -25,7 +25,7 @@ class DatasetFactory extends Factory
             'description' => fake()->paragraph(),
             'file_path' => Str::random(10),
             'type' => 'excel',
-            'owner_id' => $user->getKey(),
+            'user_id' => $user->getKey(),
             'project_id' => Project::factory()->for($user)->create()->getKey(),
         ];
     }

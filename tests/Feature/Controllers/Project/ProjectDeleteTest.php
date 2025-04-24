@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers\Authentication;
+namespace Tests\Feature\Controllers\Project;
 
 use App\Models\Project;
 use Illuminate\Testing\Fluent\AssertableJson;

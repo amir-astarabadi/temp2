@@ -12,7 +12,7 @@ class ProjectService
         $project = new Project();
         $project->name = $projectData['name'];
         $project->description = $projectData['description'];
-        $project->owner_id = $projectData['owner_id'];
+        $project->user_id = $projectData['user_id'];
         $project->save();
 
         return $project;
@@ -31,7 +31,7 @@ class ProjectService
 
     public function search(int $owner, array $query): Collection
     {
-        return Project::where('owner_id', $owner)
+        return Project::where('user_id', $owner)
             ->when($query['query'] ?? null, function ($queryBuilder) use ($query) {
                 return $queryBuilder->where('name', 'like', '%' . $query['query'] . '%')
                     ->orWhere('description', 'like', '%' . $query['query'] . '%');

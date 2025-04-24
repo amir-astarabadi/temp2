@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers\Authentication;
+namespace Tests\Feature\Controllers\Dataset;
 
 use App\Jobs\UploadDatasetToMinio;
 use App\Models\Project;
@@ -46,7 +46,7 @@ class DatasetStoreTest extends TestCase
         $this->assertDatabaseHas('datasets', [
             'name' => $datasetData['name'],
             'description' => $datasetData['description'],
-            'owner_id' => $this->authUser->getKey(),
+            'user_id' => $this->authUser->getKey(),
             'project_id' => $project->getKey(),
         ]);
     }

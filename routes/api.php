@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->middleware('throttle:10,1');
 
     Route::apiResource('datasets', DatasetController::class)
-        ->only(['index', 'show', 'store', 'update', 'destroy'])
+        ->only(['index', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
 
     Route::get('profile', [ProfileController::class, 'show'])

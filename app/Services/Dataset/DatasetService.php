@@ -3,6 +3,8 @@
 namespace App\Services\Dataset;
 
 use App\Models\Dataset;
+use App\Models\Project;
+use Illuminate\Database\Eloquent\Collection;
 
 class DatasetService
 {
@@ -11,17 +13,17 @@ class DatasetService
         $dataset = new Dataset();
         $dataset->name = $datasetData['name'];
         $dataset->description = $datasetData['description'];
-        $dataset->owner_id = $datasetData['owner_id'];
+        $dataset->user_id = $datasetData['user_id'];
         $dataset->project_id = $datasetData['project_id'];
         $dataset->type = $datasetData['type'];
         $dataset->file_path = $datasetData['file_path'];
         $dataset->status = 'uploading';
 
-        if(Dataset::where([
-            'owner_id' => $datasetData['owner_id'],
+        if (Dataset::where([
+            'user_id' => $datasetData['user_id'],
             'project_id' => $datasetData['project_id'],
             'name' => $datasetData['name']
-        ])->exists()){
+        ])->exists()) {
             $name = $datasetData['name'];
             $dataset->name = now()->timestamp . '_' . $name;
         }
@@ -33,13 +35,30 @@ class DatasetService
 
     public function update(int|Dataset $dataset, array $datasetData): Dataset
     {
-        if(is_integer($dataset)){
+        if (is_integer($dataset)) {
             $dataset = Dataset::findOrFail($dataset);
         }
-        foreach($datasetData as $datasetProperty => $newValue){
+        foreach ($datasetData as $datasetProperty => $newValue) {
             $dataset->{$datasetProperty} = $newValue;
         }
         $dataset->save();
         return $dataset;
+    }
+
+    public function search(int $owner, ?string $needle = null): Collection
+    {
+        $datasets = Dataset::query()
+            ->select(['project_id', 'user_id'])
+            ->when($needle, function ($datasetQuery) use ($needle) {
+                return $datasetQuery->where('name', 'like', '%' . $needle . '%')
+                    ->orWhere('description', 'like', '%' . $needle . '%');
+            })
+            ->get();
+        
+
+        return Project::with('datasets')
+            ->whereIn('id', $datasets->pluck('project_id')->toArray())
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 }
