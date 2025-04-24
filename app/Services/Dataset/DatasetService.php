@@ -2,13 +2,18 @@
 
 namespace App\Services\Dataset;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Enums\DatasetStatusEnum;
 use App\Models\Dataset;
 use App\Models\Project;
-use Illuminate\Database\Eloquent\Collection;
 
 class DatasetService
 {
+    public function findBy(int|string $value ,string $identifier = 'id'):?Dataset
+    {
+        return Dataset::where($identifier, '=', $value)->first();
+    }
+
     public function create(array $datasetData): Dataset
     {
         $dataset = new Dataset();

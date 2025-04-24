@@ -49,8 +49,7 @@ class DatasetController extends Controller
 
         Bus::chain([
             new UploadDatasetToMinio($tempPath, $finalPath, $dataset->getKey()),
-            new StoreDataEntries($dataset->getKey()),
-            fn() => $this->datasetService->update($dataset, ['status' => DatasetStatusEnum::INSERTED->value]),
+            new StoreDataEntries($dataset->getKey())
         ])->dispatch();
 
         return Response::success(
