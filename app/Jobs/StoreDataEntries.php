@@ -10,6 +10,8 @@ use App\Imports\DataEntryImport;
 use App\Enums\StorageDiskEnum;
 use App\Models\Dataset;
 use App\Services\Dataset\DatasetService;
+use App\Services\DatasetEntry\DataEntryService;
+use Exception;
 
 class StoreDataEntries implements ShouldQueue
 {
@@ -21,20 +23,26 @@ class StoreDataEntries implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(DatasetService $datasetService): void
+    public function handle(DatasetService $datasetService, DataEntryService $dataEntryService): void
     {
-        
         $dataset = Dataset::findOrFail($this->datasetId);
-        $dataset->update(['status' => DatasetStatusEnum::INSERTING->value]);
-        $tempImport = Excel::toCollection(null, $dataset->file_path, StorageDiskEnum::DATASET->value);
-        $totalRows = $tempImport[0]->count();
+        try{
+            $datasetService->update($dataset, ['status' => DatasetStatusEnum::INSERTING->value]);
+            $tempImport = Excel::toCollection(null, $dataset->file_path, config('filesystems.default'));
 
-        Excel::import(
-            new DataEntryImport($this->datasetId, $totalRows),
-            $dataset->file_path,
-            StorageDiskEnum::DATASET->value
-        );
-        
-        DataEntryImport::insertBufferEntry();
+            $totalRows = $tempImport[0]->count();
+            Excel::import(
+                new DataEntryImport($this->datasetId, $totalRows),
+                $dataset->file_path,
+                config('filesystems.default'),
+            );
+            DataEntryImport::insertBufferEntry();
+            $datasetService->update($dataset, ['status' => DatasetStatusEnum::INSERTED->value]);
+        }catch(Exception $e){
+            $dataEntryService->delete($dataset->getKey());
+            $datasetService->update($dataset, ['status' => DatasetStatusEnum::ERROR->value]);
+            dd($e->getMessage());
+            return;
+        }
     }
 }

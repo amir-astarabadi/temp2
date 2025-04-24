@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\DataEntry;
+use App\Services\DatasetEntry\DataEntryService;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\ToArray;
@@ -16,10 +17,15 @@ class DataEntryImport implements OnEachRow, WithChunkReading
 
     static array $dataBuffer = [];
 
+    private static ?DataEntryService $dataEntryService = null;
+
     public function __construct(
         private readonly int $datasetId,
         private readonly int $totalRows
-    ) {}
+    ) 
+    {
+        self::$dataEntryService = app(DataEntryService::class);
+    }
 
     public function onRow(Row $row)
     {
@@ -62,7 +68,7 @@ class DataEntryImport implements OnEachRow, WithChunkReading
     public static function insertBufferEntry(): void
     {
         if (!empty(self::$dataBuffer)) {
-            DataEntry::insert(self::$dataBuffer);
+            self::$dataEntryService->insert(self::$dataBuffer);
             self::$dataBuffer = [];
         }
     }
