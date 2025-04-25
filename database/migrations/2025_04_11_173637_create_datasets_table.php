@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('file_path');
             $table->enum('status', ['uploading', 'uploaded', 'inserting', 'inserted', 'processing', 'processed', 'error'])->default('uploading');
             $table->enum('type', ['csv', 'xlsx', 'xls', 'excel']);
+            $table->unsignedTinyInteger('order');
+            $table->boolean('is_pinned')->default(false);
 
             $table->timestamps();
             $table->softDeletes();

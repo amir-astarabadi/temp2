@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Project\ProjectResourceCollection;
 use App\Http\Requests\Dataset\DatasetCreateRequest;
+use App\Http\Requests\Dataset\DatasetUpdateRequest;
 use App\Services\Storage\DatasetStorageService;
 use App\Http\Resources\Dataset\DatasetResource;
 use Illuminate\Http\Response as HttpResponse;
@@ -59,10 +60,40 @@ class DatasetController extends Controller
         );
     }
 
+    public function update(DatasetUpdateRequest $request, Dataset $dataset)
+    {
+        if ($dataset->user_id !== auth()->id()) {
+            return Response::error("Datasest does not belong to you.", code: HttpResponse::HTTP_FORBIDDEN);
+        }
+
+        $this->datasetService->update($dataset, $request->validated());
+
+        return Response::success(
+            message: 'Dataset updated successfully.',
+            data: DatasetResource::make($dataset->refresh())
+        );
+    }
+
+    public function pin(Dataset $dataset)
+    {
+        if ($dataset->user_id !== auth()->id()) {
+            return Response::error("Datasest does not belong to you.", code: HttpResponse::HTTP_FORBIDDEN);
+        }
+
+        if (!$this->datasetService->pin($dataset)) {
+            return Response::error("Dataset pinning failed.", code: HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return Response::success(
+            message: 'Dataset pinned successfully.',
+            data: DatasetResource::make($dataset->refresh())
+        );
+    }
+
     public function destroy(Dataset $dataset)
     {
-        if($dataset->user_id !== auth()->id()){
-            return Response::error("Datasest does not belong to you.", code:HttpResponse::HTTP_FORBIDDEN);
+        if ($dataset->user_id !== auth()->id()) {
+            return Response::error("Datasest does not belong to you.", code: HttpResponse::HTTP_FORBIDDEN);
         }
 
         $dataset->delete();

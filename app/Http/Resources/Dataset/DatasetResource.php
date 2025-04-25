@@ -15,13 +15,15 @@ class DatasetResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id"=> $this->getKey(),
-            "name"=> $this->name,
-            "description"=> $this->description,
-            "file_path"=> $this->file_url,
-            "status"=> $this->status,
-            "file_type"=> $this->type,
-            "created_at"=> $this->created_at
+            "id" => $this->getKey(),
+            "name" => $this->name,
+            "description" => $this->description,
+            "file_path" => $this->file_url,
+            "status" => $this->status,
+            "order" => $this->order,
+            "is_pinned" => $this->is_pinned,
+            "file_type" => $this->type,
+            "created_at" => $this->created_at
         ];
     }
 }

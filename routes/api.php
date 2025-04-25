@@ -45,6 +45,9 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
     Route::apiResource('datasets', DatasetController::class)
         ->only(['index', 'store', 'update', 'destroy'])
         ->middleware('throttle:10,1');
+    Route::put('datasets/{dataset}/pin', [DatasetController::class, 'pin'])
+        ->middleware('throttle:10,1')
+        ->name('datasets.pin');
 
     Route::get('profile', [ProfileController::class, 'show'])
         ->name('profiles.show')
