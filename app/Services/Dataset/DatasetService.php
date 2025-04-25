@@ -63,10 +63,16 @@ class DatasetService
     {
         DB::transaction(function () use ($dataset) {
             $this->update($dataset, ['is_pinned' => true, 'order' => 1]);
-            Dataset::where('id', '!=', $dataset->id)
+            $datasets = Dataset::where('id', '!=', $dataset->id)
                 ->where('user_id', $dataset->user_id)
                 ->where('project_id', $dataset->project_id)
-                ->update(['order' => DB::raw('(`order` + 1)')]);
+                ->orderBy('order', 'asc')
+                ->get();
+            $nextOrder = 2;
+            foreach ($datasets as $dataset) {
+                $this->update($dataset, ['order' => $nextOrder]);
+                $nextOrder++;
+            }
         });
 
         return $dataset->is_pinned;
@@ -83,7 +89,7 @@ class DatasetService
             ->get();
 
 
-        return Project::with('datasets')
+        return Project::with(['datasets' => fn($query) => $query->orderBy('order')])
             ->whereIn('id', $datasets->pluck('project_id')->toArray())
             ->orderBy('created_at', 'desc')
             ->get();
