@@ -62,7 +62,7 @@ class DatasetService
     public function pin(Dataset $dataset): bool
     {
         DB::transaction(function () use ($dataset) {
-            $this->update($dataset, ['is_pinned' => true, 'order' => 1]);
+            $this->update($dataset, ['pinned_at' => now(), 'order' => 1]);
             $datasets = Dataset::where('id', '!=', $dataset->id)
                 ->where('user_id', $dataset->user_id)
                 ->where('project_id', $dataset->project_id)
@@ -88,7 +88,6 @@ class DatasetService
             })
             ->get();
 
-
         return Project::with(['datasets' => fn($query) => $query->orderBy('order')])
             ->whereIn('id', $datasets->pluck('project_id')->toArray())
             ->orderBy('created_at', 'desc')
@@ -104,5 +103,14 @@ class DatasetService
             ->limit(1)
             ->first()
             ?->order ?? 0;
+    }
+
+
+    public function getPinnedDatasets(int $userId): Collection
+    {
+        return Dataset::where('user_id', $userId)
+            ->whereNotNull('pinned_at')
+            ->orderBy('pinned_at', 'desc')
+            ->get();
     }
 }

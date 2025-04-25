@@ -28,7 +28,7 @@ class DatasetFactory extends Factory
             'user_id' => $user->getKey(),
             'project_id' => Project::factory()->for($user)->create()->getKey(),
             'order' => 1,
-            'is_pinned' => false,
+            'pinned_at' => null,
         ];
     }
 }

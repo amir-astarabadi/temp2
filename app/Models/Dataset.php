@@ -34,4 +34,9 @@ class Dataset extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function getIsPinnedAttribute(): bool
+    {
+        return is_null($this->pinned_at) ? false : true;
+    }
 }

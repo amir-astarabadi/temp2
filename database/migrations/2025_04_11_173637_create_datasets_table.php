@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('status', ['uploading', 'uploaded', 'inserting', 'inserted', 'processing', 'processed', 'error'])->default('uploading');
             $table->enum('type', ['csv', 'xlsx', 'xls', 'excel']);
             $table->unsignedTinyInteger('order');
-            $table->boolean('is_pinned')->default(false);
+            $table->timestamp('pinned_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
