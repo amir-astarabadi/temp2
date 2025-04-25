@@ -9,9 +9,13 @@ use App\Models\Project;
 
 class DatasetService
 {
-    public function findBy(int|string $value ,string $identifier = 'id'):?Dataset
+    public function findBy(int|string $value, string $identifier = 'id', bool $withTrashed = false): ?Dataset
     {
-        return Dataset::where($identifier, '=', $value)->first();
+        $query = Dataset::where($identifier, '=', $value);
+        if ($withTrashed) {
+            $query->withTrashed();
+        }
+        return $query->first();
     }
 
     public function create(array $datasetData): Dataset
@@ -51,16 +55,16 @@ class DatasetService
         return $dataset;
     }
 
-    public function search(int $owner, ?string $needle = null): Collection
+    public function search(int $userId, ?string $needle = null): Collection
     {
-        $datasets = Dataset::query()
+        $datasets = Dataset::query()->where('user_id', $userId)
             ->select(['project_id', 'user_id'])
             ->when($needle, function ($datasetQuery) use ($needle) {
                 return $datasetQuery->where('name', 'like', '%' . $needle . '%')
                     ->orWhere('description', 'like', '%' . $needle . '%');
             })
             ->get();
-        
+
 
         return Project::with('datasets')
             ->whereIn('id', $datasets->pluck('project_id')->toArray())

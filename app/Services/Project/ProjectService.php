@@ -29,12 +29,12 @@ class ProjectService
         return $project;
     }
 
-    public function search(int $owner, array $query): Collection
+    public function search(int $userId, ?string $needle=null): Collection
     {
-        return Project::where('user_id', $owner)
-            ->when($query['query'] ?? null, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('name', 'like', '%' . $query['query'] . '%')
-                    ->orWhere('description', 'like', '%' . $query['query'] . '%');
+        return Project::where('user_id', $userId)
+            ->when($needle ?? null, function ($queryBuilder) use ($needle) {
+                return $queryBuilder->where('name', 'like', '%' . $needle . '%')
+                    ->orWhere('description', 'like', '%' . $needle . '%');
             })
             ->select('id', 'name', 'description', 'created_at')
             ->orderBy('created_at', 'desc')

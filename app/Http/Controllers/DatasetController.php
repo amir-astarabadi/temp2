@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DatasetStatusEnum;
 use App\Http\Resources\Project\ProjectResourceCollection;
 use App\Http\Requests\Dataset\DatasetCreateRequest;
 use App\Services\Storage\DatasetStorageService;
 use App\Http\Resources\Dataset\DatasetResource;
 use Illuminate\Http\Response as HttpResponse;
 use App\Http\Requests\DatasetIndexRequest;
+use App\Jobs\DeleteDatasetFromMinio;
 use App\Services\Dataset\DatasetService;
 use Illuminate\Support\Facades\Bus;
 use App\Jobs\UploadDatasetToMinio;
 use App\Jobs\StoreDataEntries;
 use App\Responses\Response;
-use Dflydev\DotAccessData\Data;
+use App\Models\Dataset;
 
 class DatasetController extends Controller
 {
@@ -56,6 +56,20 @@ class DatasetController extends Controller
             message: 'Dataset uploaded successfully.',
             data: DatasetResource::make($dataset->refresh()),
             code: HttpResponse::HTTP_CREATED
+        );
+    }
+
+    public function destroy(Dataset $dataset)
+    {
+        if($dataset->user_id !== auth()->id()){
+            return Response::error("Datasest does not belong to you.", code:HttpResponse::HTTP_FORBIDDEN);
+        }
+
+        $dataset->delete();
+        DeleteDatasetFromMinio::dispatch($dataset->getKey());
+
+        return Response::success(
+            message: "Dataset deleted successfully."
         );
     }
 }

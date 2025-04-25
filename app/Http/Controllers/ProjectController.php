@@ -28,7 +28,7 @@ class ProjectController extends Controller
 
     public function index(ProjectIndexRequest $request)
     {
-        $projects = $this->projectService->search(owner: auth()->id(), query: $request->validated());
+        $projects = $this->projectService->search(userId: auth()->id(), needle: $request->validated('query'));
 
         return Response::success(
             message: 'Ok',
@@ -53,8 +53,15 @@ class ProjectController extends Controller
         );
     }
 
-    public function update(Project $project,ProjectUpdateRequest $request)
+    public function update(Project $project, ProjectUpdateRequest $request)
     {
+        if ($project->user_id !== auth()->id()) {
+            return Response::error(
+                message: 'Project does not belong to you.',
+                code: HttpResponse::HTTP_FORBIDDEN,
+            );
+        }
+
         $project = $this->projectService->update($request->validated(), $project);
 
         return Response::success(
@@ -66,6 +73,13 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        if ($project->user_id !== auth()->id()) {
+            return Response::error(
+                message: 'Project does not belong to you.',
+                code: HttpResponse::HTTP_FORBIDDEN,
+            );
+        }
+
         $project->delete();
 
         return Response::success(
