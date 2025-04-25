@@ -2,13 +2,9 @@
 
 namespace App\Imports;
 
-use App\Models\DataEntry;
-use App\Services\DatasetEntry\DataEntryService;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\ToArray;
-use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use App\Services\DatasetEntry\DataEntryService;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Row;
 
 class DataEntryImport implements OnEachRow, WithChunkReading
