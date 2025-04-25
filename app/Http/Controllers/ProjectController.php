@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Project\ProjectResourceCollection;
+use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
-use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Http\Resources\Dataset\DatasetResourceCollection;
 use App\Http\Resources\Project\ProjectResource;
-use App\Http\Resources\Project\ProjectResourceCollection;
 use Illuminate\Http\Response as HttpResponse;
+use App\Services\Dataset\DatasetService;
 use App\Services\Project\ProjectService;
 use App\Responses\Response;
 use App\Models\Project;
 
 class ProjectController extends Controller
 {
-    public function __construct(private ProjectService $projectService) {}
+    public function __construct(private ProjectService $projectService, private DatasetService $datasetService) {}
 
 
     public function show(Project $project)
@@ -29,11 +31,17 @@ class ProjectController extends Controller
     public function index(ProjectIndexRequest $request)
     {
         $projects = $this->projectService->search(userId: auth()->id(), needle: $request->validated('query'));
+        $pinnedDatasets = $this->datasetService->getPinnedDatasets(userId: auth()->id());
+
+        $data = [
+            'projects' => ProjectResourceCollection::make($projects),
+            'pinned_datasets' => DatasetResourceCollection::make($pinnedDatasets),
+        ];
 
         return Response::success(
             message: 'Ok',
             code: HttpResponse::HTTP_OK,
-            data: ProjectResourceCollection::make($projects),
+            data: $data,
         );
     }
 

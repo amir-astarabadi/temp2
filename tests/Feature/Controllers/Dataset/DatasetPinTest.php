@@ -28,14 +28,14 @@ class DatasetPinTest extends TestCase
                 ->where('message', 'Dataset pinned successfully.')
                 ->has('data')
                 ->where('data.id', $pinDataset->getKey())
-                ->where('data.is_pinned', 1)
+                ->where('data.is_pinned', true)
                 ->where('data.order', 1)
                 ->etc()
         );
 
         $this->assertDatabaseHas('datasets', [
             'id' => $notPinDataset->getKey(),
-            'is_pinned' => false,
+            'pinned_at' => null,
             'order' => 2,
         ]);
     }

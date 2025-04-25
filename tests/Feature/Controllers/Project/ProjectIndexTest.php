@@ -21,11 +21,11 @@ class ProjectIndexTest extends TestCase
         $response->assertJson(function (AssertableJson $assertableJson) {
             $assertableJson
                 ->has('data')
-                ->has('data', 2)
-                ->has('data.0.id')
-                ->has('data.0.name')
-                ->has('data.0.description')
-                ->has('data.0.created_at')
+                ->has('data.projects', 2)
+                ->has('data.projects.0.id')
+                ->has('data.projects.0.name')
+                ->has('data.projects.0.description')
+                ->has('data.projects.0.created_at')
                 ->etc();
         });
     }
@@ -44,8 +44,8 @@ class ProjectIndexTest extends TestCase
             fn(AssertableJson $assertableJson) =>
             $assertableJson
                 ->has('data')
-                ->has('data', 1)
-                ->where('data.0.id', $projects[0]->getKey())
+                ->count('data.projects', 1)
+                ->where('data.projects.0.id', $projects[0]->getKey())
                 ->etc()
         );
     }
