@@ -8,6 +8,7 @@ use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Resources\Dataset\DatasetResourceCollection;
 use App\Http\Resources\Project\ProjectResource;
+use App\Jobs\DeleteDatasetFromMinio;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Dataset\DatasetService;
 use App\Services\Project\ProjectService;
@@ -87,6 +88,10 @@ class ProjectController extends Controller
                 code: HttpResponse::HTTP_FORBIDDEN,
             );
         }
+        $project->datasets()->each(function ($dataset) {
+            $dataset->delete();
+            DeleteDatasetFromMinio::dispatch($dataset->getKey());
+        });
 
         $project->delete();
 

@@ -17,6 +17,7 @@ class DatasetResource extends JsonResource
         return [
             "id" => $this->getKey(),
             "name" => $this->name,
+            "project_id" => $this->project_id,
             "description" => $this->description,
             "file_path" => $this->file_url,
             "status" => $this->status,
