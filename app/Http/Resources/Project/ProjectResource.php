@@ -22,7 +22,7 @@ class ProjectResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'datasets' => DatasetResourceCollection::make($this->datasets)
+            'datasets' => DatasetResourceCollection::make($this->datasets->sortBy('order'))
         ];
     }
 }

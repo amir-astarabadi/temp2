@@ -90,6 +90,22 @@ class DatasetController extends Controller
         );
     }
 
+    public function unpin(Dataset $dataset)
+    {
+        if ($dataset->user_id !== auth()->id()) {
+            return Response::error("Datasest does not belong to you.", code: HttpResponse::HTTP_FORBIDDEN);
+        }
+
+        if (!$this->datasetService->unpin($dataset)) {
+            return Response::error("Dataset pinning failed.", code: HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return Response::success(
+            message: 'Dataset un pinned successfully.',
+            data: DatasetResource::make($dataset->refresh())
+        );
+    }
+
     public function destroy(Dataset $dataset)
     {
         if ($dataset->user_id !== auth()->id()) {
