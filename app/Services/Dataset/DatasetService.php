@@ -78,6 +78,32 @@ class DatasetService
         return $dataset->is_pinned;
     }
 
+    public function unpin(Dataset $dataset): bool
+    {
+        DB::transaction(function () use ($dataset) {
+            $this->update($dataset, ['pinned_at' => null]);
+            $pinndeDatasets = $this->getPinnedDatasets($dataset->user_id);
+            $nextOrder = 1;
+            if ($pinndeDatasets->isNotEmpty()) {
+                foreach ($pinndeDatasets as $pinnedDataset) {
+                    $this->update($pinnedDataset, ['order' => $nextOrder++]);
+                }
+            }
+            $this->update($dataset, ['order' => $nextOrder++]);
+            $datasets = Dataset::where('id', '!=', $dataset->id)
+                ->where('user_id', $dataset->user_id)
+                ->where('project_id', $dataset->project_id)
+                ->whereNull('pinned_at')
+                ->orderBy('order', 'asc')
+                ->get();
+            foreach ($datasets as $dataset) {
+                $this->update($dataset, ['order' => $nextOrder++]);
+            }
+        });
+
+        return !$dataset->is_pinned;
+    }
+
     public function search(int $userId, ?string $needle = null): Collection
     {
         $datasets = Dataset::query()->where('user_id', $userId)
