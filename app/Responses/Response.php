@@ -2,12 +2,13 @@
 
 namespace App\Responses;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\JsonResponse;
+use stdClass;
 
 class Response
 {
-    public static function success(string $message, JsonResource|array $data = [], int $code = 200): JsonResponse
+    public static function success(string $message, stdClass|JsonResource|array $data = [], int $code = 200): JsonResponse
     {
         return response()->json([
             'status' => 'success',

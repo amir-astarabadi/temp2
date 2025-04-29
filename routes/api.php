@@ -51,6 +51,9 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
     Route::put('datasets/{dataset}/unpin', [DatasetController::class, 'unpin'])
         ->middleware('throttle:2,1')
         ->name('datasets.unpin');
+    Route::get('datasets/{dataset}/metadata', [DatasetController::class, 'metadata'])
+        ->middleware('throttle:10,1')
+        ->name('datasets.metadata');
 
     Route::get('profile', [ProfileController::class, 'show'])
         ->name('profiles.show')
