@@ -16,6 +16,10 @@ class Dataset extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $casts = [
+        'metadata' => 'array',
+    ];
+
     public function getFileUrlAttribute()
     {
         try{

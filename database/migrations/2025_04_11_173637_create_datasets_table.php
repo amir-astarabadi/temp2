@@ -23,6 +23,8 @@ return new class extends Migration
             $table->unsignedTinyInteger('order');
             $table->timestamp('pinned_at')->nullable();
 
+            $table->json('metadata')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
 

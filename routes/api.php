@@ -59,3 +59,6 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->name('profiles.show')
         ->middleware('throttle:10,1');
 });
+
+
+Route::get('test/{dataset}', [DatasetController::class, 'test']);
