@@ -5,12 +5,13 @@ namespace App\Jobs;
 use App\Services\Dataset\DatasetService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ExtractDatasetMetaData implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, InteractsWithQueue;
 
     /**
      * Create a new job instance.
