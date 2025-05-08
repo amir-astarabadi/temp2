@@ -17,7 +17,7 @@ class DatasetCreateRequest extends FormRequest
                     ->whereNull('deleted_at');
             })],
             'description' => 'nullable|string',
-            'dataset' => 'required|file|mimes:xlsx,xls,csv|max:102400',
+            'dataset' => 'required|file|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel,text/comma-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|max:102400',
             'project_id' => 'required|exists:projects,id',
         ];
     }
