@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use MongoDB\Laravel\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use MongoDB\Laravel\Relations\HasMany;
 
 #[ObservedBy(DatasetObserver::class)]
 class Dataset extends Model
@@ -37,6 +38,11 @@ class Dataset extends Model
     public function project():BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function dataentries()
+    {
+        return $this->hasMany(DataEntry::class, 'dataset_id', 'id');
     }
 
     public function getIsPinnedAttribute(): bool

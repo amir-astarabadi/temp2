@@ -27,7 +27,7 @@ class StoreDataEntries implements ShouldQueue
 
             $totalRows = $tempImport[0]->count();
             Excel::import(
-                new DataEntryImport($this->datasetId, $totalRows),
+                new DataEntryImport($dataset->getKey(), $totalRows),
                 $dataset->file_path,
                 config('filesystems.default'),
             );
