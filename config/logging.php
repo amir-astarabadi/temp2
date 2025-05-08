@@ -67,6 +67,13 @@ return [
             'days' => 14,
         ],
 
+        'anylyzer_call' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/anylyzer_call.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 10,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

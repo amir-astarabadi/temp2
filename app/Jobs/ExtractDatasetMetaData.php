@@ -18,7 +18,7 @@ class ExtractDatasetMetaData implements ShouldQueue
      */
     public function __construct(private int $datasetId)
     {
-        $this->onQueue('extract_metadata');
+        // $this->onQueue('extract_metadata');
     }
 
     /**
