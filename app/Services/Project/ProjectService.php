@@ -10,9 +10,9 @@ class ProjectService
     public function create(array $projectData): Project
     {
         $project = new Project();
-        $project->name = $projectData['name'];
-        $project->description = $projectData['description'];
-        $project->user_id = $projectData['user_id'];
+        foreach($projectData as $projectProperty => $value){
+            $project->{$projectProperty} = $value;
+        }
         $project->save();
 
         return $project;
