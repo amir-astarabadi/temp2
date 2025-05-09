@@ -74,6 +74,13 @@ return [
             'days' => 10,
         ],
 
+        'datasets' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/datasets.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 10,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

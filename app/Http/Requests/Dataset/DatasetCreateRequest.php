@@ -3,10 +3,21 @@
 namespace App\Http\Requests\Dataset;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 
 class DatasetCreateRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return auth()->user()->projects()->whereId($this->get('project_id'))->exists();
+    }
+
+    public function failedAuthorization()
+    {
+        abort(Response::HTTP_UNAUTHORIZED, 'you can not upload dataset on projects which not belongs to you.');
+    }
+
     public function rules(): array
     {
         return [

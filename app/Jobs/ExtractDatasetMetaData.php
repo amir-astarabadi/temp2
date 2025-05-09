@@ -28,6 +28,11 @@ class ExtractDatasetMetaData implements ShouldQueue
     {
         $dataset = $datasetService->findBy($this->datasetId);
 
+        if (!$dataset) {
+            Log::channel('datasets')->warning("$this->datasetId dataset does not exist");
+            return;
+        }
+
         $url = config('analyser.extract_metadata') . $this->datasetId;
 
         $response = Http::withHeaders([
