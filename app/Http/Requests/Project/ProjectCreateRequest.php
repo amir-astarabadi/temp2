@@ -11,7 +11,7 @@ class ProjectCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'user_id' => 'required'
         ];
     }
