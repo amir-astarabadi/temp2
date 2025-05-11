@@ -76,9 +76,20 @@ class DataEntryImport implements OnEachRow, WithChunkReading
             if (!isset(self::$headers[$key])) {
                 continue;
             }
-            $decoratedData[self::$headers[$key]] = $value;
+            $decoratedData[self::$headers[$key]] = $this->replaceNullValues($value);
         }
 
         return $decoratedData;
+    }
+
+    private function replaceNullValues($value)
+    {
+        $tempValue = $value;
+
+        if(is_string($value)){
+            $tempValue = strtolower($value); 
+        }
+
+        return in_array($tempValue, ['.', 'na']) ? null : $value;
     }
 }
