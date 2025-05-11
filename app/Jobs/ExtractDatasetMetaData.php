@@ -35,10 +35,7 @@ class ExtractDatasetMetaData implements ShouldQueue
 
         $url = config('analyser.extract_metadata') . $this->datasetId;
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json'
-        ])
-            ->get($url);
+        $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
 
         if ($response->successful())
             $datasetService->update($dataset, ['metadata' => $response->json()]);
