@@ -130,28 +130,10 @@ class DatasetController extends Controller
             return Response::error("Datasest does not belong to you.", code: HttpResponse::HTTP_FORBIDDEN);
         }
 
-        $metadata = $this->preserveNumericKeys($dataset->metadata);
-
         return Response::success(
             message: 'Dataset metadata fetched successfully.',
-            data: ['metadata' => $metadata]
+            data: ['metadata' => $dataset->metadata]
         );
-    }
-
-    private function preserveNumericKeys($array)
-    {
-        $result = new stdClass();
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                // Recursively handle nested arrays
-                $result->$key = $this->preserveNumericKeys($value);
-            } else {
-                $result->$key = $value;
-            }
-        }
-
-        return $result;
     }
 
     public function test(Dataset $dataset)
