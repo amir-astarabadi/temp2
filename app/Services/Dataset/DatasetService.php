@@ -32,6 +32,7 @@ class DatasetService
         $dataset->file_path = $datasetData['file_path'];
         $dataset->status = DatasetStatusEnum::UPLOADING->value;
         $dataset->order = $latestDatasestOrder + 1;
+        $dataset->replace_missing_values = $datasetData['replace_missing_values'] ?? false;
 
         if (Dataset::where([
             'user_id' => $datasetData['user_id'],

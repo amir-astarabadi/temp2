@@ -30,6 +30,7 @@ class DatasetCreateRequest extends FormRequest
             'description' => 'nullable|string',
             'dataset' => 'required|file|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel,text/comma-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|max:102400',
             'project_id' => 'required|exists:projects,id',
+            'replace_missing_values' => ['nullable', 'boolean']
         ];
     }
 
