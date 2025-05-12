@@ -32,8 +32,8 @@ class ExtractDatasetMetaData implements ShouldQueue
             Log::channel('datasets')->warning("$this->datasetId dataset does not exist");
             return;
         }
-
-        $url = config('analyser.extract_metadata') . $this->datasetId;
+        $queryParams = $dataset->replace_missing_values ? "?replace_missing_values=1" : "";
+        $url = config('analyser.extract_metadata') . $this->datasetId . $queryParams;
 
         $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
 
