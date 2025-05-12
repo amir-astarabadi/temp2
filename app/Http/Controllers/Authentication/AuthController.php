@@ -45,7 +45,7 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
-        $userData = $request->only('name', 'email', 'password');
+        $userData = $request->only('name', 'email', 'password', 'accepted_contract');
         $user = $this->authService->register($userData);
 
         $user->sendEmailVerificationNotification();
