@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Observers\DatasetObserver;
-use Exception;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use MongoDB\Laravel\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use MongoDB\Laravel\Relations\HasMany;
+use App\Observers\DatasetObserver;
+use Illuminate\Support\Arr;
+use Exception;
 
 #[ObservedBy(DatasetObserver::class)]
 class Dataset extends Model
@@ -48,5 +48,25 @@ class Dataset extends Model
     public function getIsPinnedAttribute(): bool
     {
         return is_null($this->pinned_at) ? false : true;
+    }
+
+    public function getColumnsAttribute(): array
+    {
+        if(is_null($this->metadata)){
+            return [];
+        }
+        return array_column($this->metadata, 'column');
+    }
+
+
+    public function getCategoricalColumnsAttribute(): array
+    {
+        if(is_null($this->metadata)){
+            return [];
+        }
+
+        $categoricalColumns = Arr::where($this->metadata, fn($record) => $record['type'] === 'categorical');
+
+        return array_column($categoricalColumns, 'column');
     }
 }

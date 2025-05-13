@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Authentication;
 
 use App\Http\Requests\Authentication\PasswordForgetRequest;
+use App\Http\Requests\Authentication\PasswordResetRequest;
 use App\Http\Requests\Authentication\UserRegisterRequest;
+use App\Http\Requests\Authentication\VerifyEmailRequest;
 use App\Exceptions\Authentication\LoginException;
 use App\Http\Requests\Authentication\LoginRequest;
 use App\Notifications\ForgetPasswordNotification;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Authentication\AuthService;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Authentication\PasswordResetRequest;
-use App\Http\Requests\Authentication\VerifyEmailRequest;
 use App\Http\Resources\User\UserResource;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Responses\Response;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use stdClass;
 
 class AuthController extends Controller
 {
