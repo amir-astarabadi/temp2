@@ -61,6 +61,10 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->middleware('throttle:5,1')
         ->name('charts.store');
 
+    Route::get('/charts/{chart}', [ChartController::class, 'show'])
+        ->middleware('throttle:10,1')
+        ->name('charts.show');
+
     Route::get('profile', [ProfileController::class, 'show'])
         ->name('profiles.show')
         ->middleware('throttle:10,1');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Chart\ChartUpdateLayoutRequest;
 use App\Http\Requests\Chart\ChartCreateRequest;
 use App\Http\Resources\Chart\ChartResource;
+use App\Models\Chart;
 use Illuminate\Http\Response as HttpResponse;
 use App\Services\Chart\ChartService;
 use App\Responses\Response;
@@ -25,6 +26,13 @@ class ChartController extends Controller
         $metadata = $this->chartService->{$chartType}($dataset->id, $request->validated('variables'), $request->validated('category_variable'));
         $chartData = array_merge($request->validated(), ['metadata' => $metadata]);
         $chart = $this->chartService->save($chartData);
+        return Response::success(message: "",data: ChartResource::make($chart));
+    }
+
+    public function show(Chart $chart)
+    {
+        abort_if($chart->dataset->user_id !== auth()->id(), 'This chart does not belong to you!');        
+
         return Response::success(message: "",data: ChartResource::make($chart));
     }
 
