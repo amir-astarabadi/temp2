@@ -12,6 +12,7 @@ class Chart extends Model
     public $casts = [
         'variables' => 'array',
         'metadata' => 'array',
+        'chart_layout' => 'array',
     ];
 
     public const TYPES = [
