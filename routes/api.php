@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Authentication\GoogleLoginController;
 use App\Http\Controllers\Authentication\AuthController;
-use App\Http\Controllers\ChartController;
+use App\Http\Controllers\VisualizerController;
 use App\Http\Controllers\DatasetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,10 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
     Route::post('datasets/{dataset}/charts', [ChartController::class, 'store'])
         ->middleware('throttle:5,1')
         ->name('charts.store');
+
+    Route::get('datasets/{dataset}/visualizers', [VisualizerController::class, 'show'])
+        ->middleware('throttle:5,1')
+        ->name('visualizers.show');
 
     Route::get('/charts/{chart}', [ChartController::class, 'show'])
         ->middleware('throttle:10,1')
