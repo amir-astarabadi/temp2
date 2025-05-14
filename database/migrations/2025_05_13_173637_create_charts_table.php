@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('charts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dataset_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('dataset_id')->constrained('datasets')->onDelete('cascade');
             $table->string('title');
             $table->enum('chart_type', ['bar', 'line', 'pie']);
             $table->json('variables');
             $table->string('description')->nullable();
             $table->json('metadata');
+            $table->json('chart_layout')->nullable();
+            
             $table->timestamps();
         });
     }

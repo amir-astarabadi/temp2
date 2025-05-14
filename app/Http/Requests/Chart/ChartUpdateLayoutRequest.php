@@ -2,14 +2,11 @@
 
 namespace App\Http\Requests\Chart;
 
-use App\Models\Chart;
-use App\Models\Dataset;
-use App\Rules\ChartVariablesValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Dataset;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 
-class ChartCreateRequest extends FormRequest
+class ChartUpdateLayoutRequest extends FormRequest
 {
     private ?Dataset $dataset = null;
 
@@ -26,13 +23,7 @@ class ChartCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
-            'chart_type' => ['required', 'string', 'in:' . Chart::getTypes()],
-            'description' => 'nullable|string',
-            'dataset_id' => ['required', 'integer'],
-            'category_variable' => ['nullable', 'string', "in:" . implode(',', $this->dataset->categorical_columns)],
-            'variables' => [Rule::requiredIf($this->get('chart_type') == 'line'), 'array', new ChartVariablesValidation($this->dataset, $this->get('chart_type'))],
-            'chart_layout' => ['required', 'array'],
+            'charts_position' => ['required', 'array'],
         ];
     }
 
