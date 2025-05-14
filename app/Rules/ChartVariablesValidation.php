@@ -2,10 +2,11 @@
 
 namespace App\Rules;
 
+use App\Models\Chart;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Arr;
 use App\Models\Dataset;
 use Closure;
-use Illuminate\Support\Arr;
 
 class ChartVariablesValidation implements ValidationRule
 {
@@ -14,20 +15,23 @@ class ChartVariablesValidation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $chartTrypeValidation = $this->chartTrype . "ChartValidation";
-        if (!method_exists($this, $chartTrypeValidation)) {
-            $fail("Invalid Chart Type");
+        if (method_exists($this, $chartTrypeValidation)) {
+            
+            if ($message = $this->{$chartTrypeValidation}($value)) {
+                $fail($message);
+            }
+            return;
         }
 
-        if ($message = $this->{$chartTrypeValidation}($value)) {
-            $fail($message);
-        }
+        $fail("Invalid Chart Type $this->chartTrype. we support " . Chart::getTypes());
+   
     }
 
     public function lineChartValidation(array $columns): null|string
     {
         $requestedVariableKinds = array_keys($columns);
         $validVariableKinds = ["independent_variable", "dependent_variable"];
-        if(array_diff($validVariableKinds, $requestedVariableKinds)){
+        if (array_diff($validVariableKinds, $requestedVariableKinds)) {
             return "for line chart you should select 'independent' and 'dependent' variables.";
         }
 
@@ -43,5 +47,11 @@ class ChartVariablesValidation implements ValidationRule
         }
 
         return null;
+    }
+
+    public function histogramChartValidation(array $columns): null|string
+    {
+        // TODO : add his validation
+        return "add his validation";
     }
 }

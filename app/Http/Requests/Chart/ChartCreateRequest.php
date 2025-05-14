@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Chart;
 
-use App\Models\Chart;
-use App\Models\Dataset;
-use App\Rules\ChartVariablesValidation;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Response;
+use App\Rules\ChartVariablesValidation;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Response;
+use App\Models\Dataset;
+use App\Models\Chart;
 
 class ChartCreateRequest extends FormRequest
 {
@@ -43,13 +43,5 @@ class ChartCreateRequest extends FormRequest
         return $this->merge([
             'dataset_id' => $this->dataset?->id
         ]);
-    }
-
-    public function messages()
-    {
-
-        return [
-            'name.unique' => 'The dataset name has already been taken for this project.',
-        ];
     }
 }

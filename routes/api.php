@@ -66,6 +66,10 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->middleware('throttle:5,1')
         ->name('visualizers.show');
 
+    Route::put('datasets/{dataset}/visualizers', [VisualizerController::class, 'update'])
+        ->middleware('throttle:5,1')
+        ->name('visualizers.update');
+
     Route::get('/charts/{chart}', [ChartController::class, 'show'])
         ->middleware('throttle:10,1')
         ->name('charts.show');

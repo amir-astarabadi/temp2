@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('dataset_id')->constrained('datasets')->onDelete('cascade');
             $table->string('title');
-            $table->enum('chart_type', ['bar', 'line', 'pie']);
+            $table->enum('chart_type', ['bar', 'line', 'pie', 'histogram', 'scatter_plots', 'heatmaps']);
             $table->json('variables');
             $table->string('description')->nullable();
             $table->json('metadata');
             $table->json('chart_layout')->nullable();
-            
+
             $table->timestamps();
         });
     }
