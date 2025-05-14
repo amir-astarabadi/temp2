@@ -31,7 +31,7 @@ class ChartController extends Controller
 
     public function show(Chart $chart)
     {
-        abort_if($chart->dataset->user_id !== auth()->id(), 'This chart does not belong to you!');        
+        abort_if($chart->dataset->user_id !== auth()->id(), HttpResponse::HTTP_UNAUTHORIZED, 'This chart does not belong to you!');        
 
         return Response::success(message: "",data: ChartResource::make($chart));
     }
