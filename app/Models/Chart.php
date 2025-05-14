@@ -19,6 +19,9 @@ class Chart extends Model
         'pie',
         'line',
         'bar',
+        'histogram',
+        'scatter_plots',
+        'heatmaps',
     ];
 
     public function dataset()
