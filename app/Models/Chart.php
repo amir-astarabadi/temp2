@@ -13,6 +13,8 @@ class Chart extends Model
         'variables' => 'array',
         'metadata' => 'array',
         'chart_layout' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public const TYPES = [
