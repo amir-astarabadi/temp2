@@ -30,7 +30,6 @@ class ChartCreateRequest extends FormRequest
             'chart_type' => ['required', 'string', 'in:' . Chart::getTypes()],
             'description' => 'nullable|string',
             'dataset_id' => ['required', 'integer'],
-            'category_variable' => ['nullable', 'string', "in:" . implode(',', $this->dataset->categorical_columns)],
             'variables' => [Rule::requiredIf($this->get('chart_type') == 'line'), 'array', new ChartVariablesValidation($this->dataset, $this->get('chart_type'))],
             'chart_layout' => ['required', 'array'],
         ];
