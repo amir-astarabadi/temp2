@@ -8,7 +8,7 @@ use App\Models\Chart;
 
 class ChartService
 {
-    public function __construct(private DatasetService $datasetService){}
+    public function __construct(private DatasetService $datasetService) {}
 
     public function line(int $datasetId, array $variables, null|string $categoryVariable = null): array
     {
@@ -24,7 +24,7 @@ class ChartService
         return $response->json();
     }
 
-    public function histogram(int $datasetId, array $variables, null|string $categoryVariable = null):array 
+    public function histogram(int $datasetId, array $variables, null|string $categoryVariable = null): array
     {
         // $url = config('analyser.histogram_chart') . $datasetId . "?" . http_build_query($variables);
         // $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
@@ -45,5 +45,14 @@ class ChartService
         $chart->save();
 
         return $chart;
+    }
+
+    public function update(Chart $chart, array $chartData): void
+    {
+        foreach ($chartData as $property => $value) {
+            $chart->{$property} = $value;
+        }
+        
+        $chart->save();
     }
 }
