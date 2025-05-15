@@ -22,7 +22,7 @@ class Chart extends Model
         'line',
         'bar',
         'histogram',
-        'scatter_plots',
+        'scatter',
         'heatmaps',
     ];
 
