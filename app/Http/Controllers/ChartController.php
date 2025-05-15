@@ -34,4 +34,13 @@ class ChartController extends Controller
 
         return Response::success(message: "",data: ChartResource::make($chart));
     }
+
+    public function destroy(Chart $chart)
+    {
+        abort_if($chart->dataset->user_id !== auth()->id(), HttpResponse::HTTP_UNAUTHORIZED, 'This chart does not belong to you!');        
+        
+        $chart->delete();
+
+        return Response::success(message: "Chart deleted successfully.",);
+    }
 }

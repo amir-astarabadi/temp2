@@ -74,6 +74,10 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->middleware('throttle:10,1')
         ->name('charts.show');
 
+    Route::delete('/charts/{chart}', [ChartController::class, 'destroy'])
+        ->middleware('throttle:10,1')
+        ->name('charts.delete');
+
     Route::get('profile', [ProfileController::class, 'show'])
         ->name('profiles.show')
         ->middleware('throttle:10,1');
