@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('charts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('dataset_id')->constrained('datasets')->onDelete('cascade');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->enum('chart_type', ['bar', 'line', 'pie', 'histogram', 'scatter', 'heatmaps']);
             $table->json('variables');
             $table->string('description')->nullable();

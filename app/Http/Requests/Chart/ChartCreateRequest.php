@@ -20,13 +20,13 @@ class ChartCreateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        abort(Response::HTTP_UNAUTHORIZED, 'You Just Can Add Chart To Your Dataset');
+        abort(Response::HTTP_UNAUTHORIZED, 'This dataset does not belongs to you.');
     }
 
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
+            'title' => ['nullable', 'string'],
             'chart_type' => ['required', 'string', 'in:' . Chart::getTypes()],
             'description' => 'nullable|string',
             'dataset_id' => ['required', 'integer'],

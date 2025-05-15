@@ -74,6 +74,10 @@ Route::middleware(['auth:sanctum', 'verified_email'])->group(function () {
         ->middleware('throttle:10,1')
         ->name('charts.show');
 
+    Route::put('/charts/{chart}', [ChartController::class, 'update'])
+        ->middleware('throttle:10,1')
+        ->name('charts.update');
+
     Route::delete('/charts/{chart}', [ChartController::class, 'destroy'])
         ->middleware('throttle:10,1')
         ->name('charts.delete');

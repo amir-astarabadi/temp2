@@ -15,7 +15,7 @@ class ChartResource extends JsonResource
                 "title" => $this->title,
                 "chart_type" => $this->chart_type,
                 "variables" => $this->variables,
-                "description" => "some text",
+                "description" => $this->description,
                 "metadata" => $this->metadata,
                 "chart_layout" => $this->chart_layout,
                 "created_at" => $this->created_at,
