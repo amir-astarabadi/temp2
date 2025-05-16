@@ -5,32 +5,34 @@ namespace App\Services\Chart;
 use App\Services\Dataset\DatasetService;
 use Illuminate\Support\Facades\Http;
 use App\Models\Chart;
+use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 
 class ChartService
 {
     public function __construct(private DatasetService $datasetService) {}
 
-    public function line(int $datasetId, array $variables, null|string $categoryVariable = null): array
+    public function line(int $datasetId, array $variables): array
     {
         $url = config('analyser.line_chart') . $datasetId . "?" . http_build_query($variables);
         $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
         return $response->json();
     }
 
-    public function scatter(int $datasetId, array $variables, null|string $categoryVariable = null): array
+    public function scatter(int $datasetId, array $variables): array
     {
         $url = config('analyser.scatter_chart') . $datasetId . "?" . http_build_query($variables);
         $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
         return $response->json();
     }
 
-    public function histogram(int $datasetId, array $variables, null|string $categoryVariable = null): array
+    public function histogram(int $datasetId, array $variables): array|Response
     {
-        // $url = config('analyser.histogram_chart') . $datasetId . "?" . http_build_query($variables);
-        // $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
-        dd(
-            $this->datasetService->findBy($datasetId)->metadata
-        );
+        $url = config('analyser.histogram_chart') . $datasetId . "?" . http_build_query($variables);
+        
+        dd($url);
+        $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
+
         return $response->json();
     }
 

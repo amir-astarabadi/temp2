@@ -66,8 +66,8 @@ class ChartVariablesValidation implements ValidationRule
         if (array_diff($validVariableKinds, $requestedVariableKinds)) {
             return "for histogram you should select 'independent' variables.";
         }
-
-        $variables = Arr::where($this->dataset->metadata, fn($record) => in_array($record['column'], $columns));
+        
+        $variables = Arr::where($this->dataset->metadata, fn($record) => $record['column'] == $columns['independent_variable']);
 
         if (count($variables) !== 1) {
             return "for histogram chart one variable must select.";
