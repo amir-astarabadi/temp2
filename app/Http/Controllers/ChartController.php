@@ -10,10 +10,11 @@ use App\Services\Chart\ChartService;
 use App\Responses\Response;
 use App\Models\Dataset;
 use App\Models\Chart;
+use App\Services\Visualizer\VisualizerService;
 
 class ChartController extends Controller
 {
-    public function __construct(private ChartService $chartService) {}
+    public function __construct(private ChartService $chartService, private VisualizerService $visualizerService) {}
 
     public function store(ChartCreateRequest $request, Dataset $dataset)
     {
@@ -59,9 +60,13 @@ class ChartController extends Controller
     public function destroy(Chart $chart)
     {
         abort_if($chart->dataset->user_id !== auth()->id(), HttpResponse::HTTP_UNAUTHORIZED, 'This chart does not belong to you!');
+        
+        $dataset = $chart->dataset;
 
         $chart->delete();
 
-        return Response::success(message: "Chart deleted successfully.",);
+        $layouts = $this->visualizerService->makeLayout($dataset);
+
+        return Response::success(message: "Chart deleted successfully.", data: $layouts);
     }
 }
