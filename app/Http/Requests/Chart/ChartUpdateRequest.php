@@ -26,7 +26,6 @@ class ChartUpdateRequest extends FormRequest
         $baseRules = [
             'title' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'chart_layout' => ['required', 'array'],
         ];
         $typeAndVariableRules = [];
 
