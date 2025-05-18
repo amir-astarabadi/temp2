@@ -44,6 +44,7 @@ class BroadcastDatasetStatusUpdateEvent implements ShouldBroadcast
             'id' => $this->datasetId,
             'name' => $dataset->name,
             'status' => $dataset->status,
+            'message' => "dataset $dataset->title has been $dataset->status.",
         ];
     }
 }

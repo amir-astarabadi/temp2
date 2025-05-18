@@ -42,7 +42,7 @@ class ChartVariablesValidation implements ValidationRule
         $categoryVariable = array_values(Arr::where($this->dataset->metadata, fn($record) => in_array($record['column'], Arr::only($columns, 'category_variable'))));
 
         if ($categoryVariable && $categoryVariable[0]['type'] !== 'categorical') {
-            return "for $chartType 'acategory variable' must have 'categorical' type.";
+            return "for $chartType 'category variable' must have 'categorical' type.";
         }
 
         foreach ($variables as $variable) {
@@ -67,10 +67,10 @@ class ChartVariablesValidation implements ValidationRule
             return "for histogram you should select 'independent' variables.";
         }
         
-        $variables = Arr::where($this->dataset->metadata, fn($record) => $record['column'] == $columns['independent_variable']);
+        $variables = array_values(Arr::where($this->dataset->metadata, fn($record) => in_array($record['column'], Arr::only($columns, 'numeric'))));
 
         if (count($variables) !== 1) {
-            return "for histogram chart one variable must select.";
+            return "for histogram chart one continues variable must select.";
         }
 
         return null;
