@@ -30,7 +30,6 @@ class ChartService
     {
         $url = config('analyser.histogram_chart') . $datasetId . "?" . http_build_query($variables);
         
-        dd($url);
         $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
 
         return $response->json();
