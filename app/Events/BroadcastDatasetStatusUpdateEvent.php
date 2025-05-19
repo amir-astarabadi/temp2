@@ -23,6 +23,11 @@ class BroadcastDatasetStatusUpdateEvent implements ShouldBroadcast
         //
     }
 
+    public function broadcastAs(): string
+    {
+        return 'dataset.status.update';
+    }
+
     public function broadcastOn(): array
     {
         return [
