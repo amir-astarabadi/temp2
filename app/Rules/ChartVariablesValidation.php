@@ -66,7 +66,7 @@ class ChartVariablesValidation implements ValidationRule
         if (array_diff($validVariableKinds, $requestedVariableKinds)) {
             return "for histogram you should select 'independent' variables.";
         }
-        
+
         $variables = array_values(Arr::where($this->dataset->metadata, fn($record) => in_array($record['column'], Arr::only($columns, 'independent_variable'))));
         if (count($variables) !== 1 || $variables[0]['type'] !== 'numeric') {
             return "for histogram chart one continues variable must select.";
@@ -81,7 +81,7 @@ class ChartVariablesValidation implements ValidationRule
             return "for histogram chart 'category variable' must be categorical.";
         }
 
-        $static = $columns['statistic'];
+        $static = $columns['statistic'] ?? null;
         if (!in_array($static, ['count', 'percent', 'density'])) {
             return "for histogram chart statistic can be 'count', 'percent', 'density'.";
         }
