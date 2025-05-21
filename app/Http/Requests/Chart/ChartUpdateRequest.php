@@ -29,19 +29,12 @@ class ChartUpdateRequest extends FormRequest
         ];
         $typeAndVariableRules = [];
 
-        if($this->hasChartTypeChanged() || $this->hasVariablesChanged()){
+        if ($this->hasChartTypeChanged() || $this->hasVariablesChanged()) {
             $typeAndVariableRules = $this->gettypeAndVariableRules();
             $this->needRegenerate = true;
         }
 
         return array_merge($baseRules, $typeAndVariableRules);
-    }
-
-    public function messages()
-    {
-        return [
-            'name.unique' => 'The dataset name has already been taken for this project.',
-        ];
     }
 
     private function gettypeAndVariableRules(): array
@@ -60,6 +53,16 @@ class ChartUpdateRequest extends FormRequest
     private function hasVariablesChanged()
     {
         $oldVariables = $this->route('chart')->variables;
+
+        if (count($oldVariables) !== count($this->get('variables'))) {
+            return true;
+        }
+        
+        foreach ($oldVariables as $key => $value) {
+            if (!isset($this->get('variables')[$key]) || $this->get('variables')[$key] !== $value) {
+                return true;
+            }
+        }
 
         foreach ($this->get('variables') as $key => $value) {
             if (!isset($oldVariables[$key]) || $oldVariables[$key] !== $value) {
