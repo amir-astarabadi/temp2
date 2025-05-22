@@ -84,4 +84,30 @@ class ChartVariablesValidation implements ValidationRule
 
         return null;
     }
+
+    private function barChartValidation(array $columns): null|string
+    {
+        $requestedVariableKinds = array_keys($columns);
+        $validVariableKinds = ["independent_variable"];
+        if (array_diff($validVariableKinds, $requestedVariableKinds)) {
+            return "for bar chart you should select 'independent' variable.";
+        }
+
+        $variable = Arr::where($this->dataset->metadata, fn($record) => in_array($record['column'], Arr::only($columns, 'independent_variable')));
+        if (count($variable) !== 1) {
+            return "selected 'independent' variable does not belongs to this dataset.";
+        }
+
+        if (isset($columns['category_variable'])) {
+            $categoryVariable = Arr::first($this->dataset->metadata, fn($record) => $record['column'] == $columns['category_variable']);
+            if (is_null($categoryVariable)) {
+                return "selected 'cagegory' variable does not belongs to this dataset.";
+            }
+            if ($categoryVariable['type'] && $categoryVariable['type'] !== 'categorical') {
+                return "for bar chart 'category variable' must be categorical.";
+            }
+        }
+
+        return null;
+    }
 }
