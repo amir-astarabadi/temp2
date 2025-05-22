@@ -5,4 +5,5 @@ return [
     'line_chart' => env("ANALYSER_LINE_CHART_URL", "http://qanun_api_analyser:8001/dataset/line-chart/"),
     'scatter_chart' => env("ANALYSER_SCATTER_CHART_URL", "http://qanun_api_analyser:8001/dataset/scatter-chart/"),
     'histogram_chart' => env("ANALYSER_HISTOGRAM_CHART_URL", "http://qanun_api_analyser:8001/dataset/histogram-chart/"),
+    'bar_chart' => env("ANALYSER_BAR_CHART_URL", "http://qanun_api_analyser:8001/dataset/bar-chart/"),
 ];

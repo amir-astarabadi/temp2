@@ -35,6 +35,15 @@ class ChartService
         return $response->json();
     }
 
+    public function bar(int $datasetId, array $variables): array|Response
+    {
+        $url = config('analyser.bar_chart') . $datasetId . "?" . http_build_query($variables);
+        
+        $response = Http::withHeaders(['Accept' => 'application/json'])->get($url);
+
+        return $response->json();
+    }
+
     public function save(array $chartData): Chart
     {
         $chart = new Chart();
